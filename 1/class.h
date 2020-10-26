@@ -2,15 +2,15 @@
 #include <iostream>
 #include <string>
 // TLine<unsigned short, std::string> - T
-// Вектор
+// Р’РµРєС‚РѕСЂ
 template <typename T>
 class TVector {
 
-	// Массив линий
+	// РњР°СЃСЃРёРІ Р»РёРЅРёР№
 	T *lines;
-	// Размер массива
+	// Р Р°Р·РјРµСЂ РјР°СЃСЃРёРІР°
 	unsigned long long size;
-	// Макс размер
+	// РњР°РєСЃ СЂР°Р·РјРµСЂ
 	unsigned long long capacity;
 
 public:
@@ -32,7 +32,7 @@ public:
 		}
 	}
 
-	// Метод добавления новой линии в массив
+	// РњРµС‚РѕРґ РґРѕР±Р°РІР»РµРЅРёСЏ РЅРѕРІРѕР№ Р»РёРЅРёРё РІ РјР°СЃСЃРёРІ
 	void PushBack(T &t) {
 		if (size < capacity) {
 			lines[size++] = t;
@@ -53,17 +53,17 @@ public:
 		capacity = newCap;
 	}
 
-	// Получение линии из массива по индексу
+	// РџРѕР»СѓС‡РµРЅРёРµ Р»РёРЅРёРё РёР· РјР°СЃСЃРёРІР° РїРѕ РёРЅРґРµРєСЃСѓ
 	T * Get(unsigned long long index) {
 		return &lines[index];
 	}
 
-	// Установка линии в массив по индексу
+	// РЈСЃС‚Р°РЅРѕРІРєР° Р»РёРЅРёРё РІ РјР°СЃСЃРёРІ РїРѕ РёРЅРґРµРєСЃСѓ
 	void Set(T &a, unsigned long long index) {
 		lines[index] = a;
 	}
 
-	// Вывод вектора на экран
+	// Р’С‹РІРѕРґ РІРµРєС‚РѕСЂР° РЅР° СЌРєСЂР°РЅ
 	void PrintAll() {
 		for (unsigned long long i = 0; i < size; ++i)
 		{
@@ -71,7 +71,7 @@ public:
 		}
 	}
 
-	// Получение размера вектора
+	// РџРѕР»СѓС‡РµРЅРёРµ СЂР°Р·РјРµСЂР° РІРµРєС‚РѕСЂР°
 	unsigned long long Size() {
 		return size;
 	}

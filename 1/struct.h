@@ -1,17 +1,17 @@
 #pragma once
-// Линии
+// Р›РёРЅРёРё
 template <typename X, typename Y>
 struct TLine
 {
-	//// Ключ
+	//// РљР»СЋС‡
 	//unsigned short key;
-	//// Значение
+	//// Р—РЅР°С‡РµРЅРёРµ
 	//std::string value;
 
 public:
-	// Ключ
+	// РљР»СЋС‡
 	X key;
-	// Значение
+	// Р—РЅР°С‡РµРЅРёРµ
 	Y * value;
 
 	void Clear() {

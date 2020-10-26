@@ -2,21 +2,21 @@
 #include "struct.h"
 #include <cstring>
 
-// Сама сортировка вектора
+// РЎР°РјР° СЃРѕСЂС‚РёСЂРѕРІРєР° РІРµРєС‚РѕСЂР°
 //TVector<TLine<unsigned int, std::string> > Sort(TVector<TLine<unsigned int, std::string> > & vct, unsigned int max) {
 void Sort(TVector<TLine<unsigned int, std::string> > & vct, unsigned int max){
 	TVector<TLine<unsigned int, std::string> > result;
-	// Массив количества найденных элементов в векторе
+	// РњР°СЃСЃРёРІ РєРѕР»РёС‡РµСЃС‚РІР° РЅР°Р№РґРµРЅРЅС‹С… СЌР»РµРјРµРЅС‚РѕРІ РІ РІРµРєС‚РѕСЂРµ
 	unsigned int *sortArrCountOfElements = new unsigned int[max + 1];
-	// Массив индекса правильного вхождения элемента
+	// РњР°СЃСЃРёРІ РёРЅРґРµРєСЃР° РїСЂР°РІРёР»СЊРЅРѕРіРѕ РІС…РѕР¶РґРµРЅРёСЏ СЌР»РµРјРµРЅС‚Р°
 	unsigned int *sortArrIndexOfEnter = new unsigned int[max + 1];
-	// Обнуление массивов
+	// РћР±РЅСѓР»РµРЅРёРµ РјР°СЃСЃРёРІРѕРІ
 	memset(sortArrIndexOfEnter, 0, (max + 1) * sizeof(unsigned int));
 	memset(sortArrCountOfElements, 0, (max + 1) * sizeof(unsigned int));
-	// Получение размера исходного вектора введенных строк
+	// РџРѕР»СѓС‡РµРЅРёРµ СЂР°Р·РјРµСЂР° РёСЃС…РѕРґРЅРѕРіРѕ РІРµРєС‚РѕСЂР° РІРІРµРґРµРЅРЅС‹С… СЃС‚СЂРѕРє
 	unsigned long long sizeOfVector = vct.Size();
 	
-	// Заполнение массива пустыми линиями
+	// Р—Р°РїРѕР»РЅРµРЅРёРµ РјР°СЃСЃРёРІР° РїСѓСЃС‚С‹РјРё Р»РёРЅРёСЏРјРё
 	for (unsigned long long i = 0; i < sizeOfVector; i++)
 	{
 		TLine<unsigned int, std::string> *tmp = new TLine<unsigned int, std::string>;
@@ -25,19 +25,19 @@ void Sort(TVector<TLine<unsigned int, std::string> > & vct, unsigned int max){
 		result.PushBack(*tmp);
 	}
 
-	// Проверка на пустой ввод
+	// РџСЂРѕРІРµСЂРєР° РЅР° РїСѓСЃС‚РѕР№ РІРІРѕРґ
 	if (sizeOfVector == 0) {
 		//return result;
 		return;
 	}
 
-	// Подсчет количества элементов
+	// РџРѕРґСЃС‡РµС‚ РєРѕР»РёС‡РµСЃС‚РІР° СЌР»РµРјРµРЅС‚РѕРІ
 	for (unsigned long long i = 0; i < sizeOfVector; i++)
 	{
 		sortArrCountOfElements[vct.Get(i)->key]++;
 	}
 
-	// Заполнение массива индексов
+	// Р—Р°РїРѕР»РЅРµРЅРёРµ РјР°СЃСЃРёРІР° РёРЅРґРµРєСЃРѕРІ
 	unsigned long long curIndex = -1;
 	for (unsigned long long i = 0; i <= max; i++)
 	{

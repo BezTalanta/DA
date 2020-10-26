@@ -7,27 +7,27 @@
 void Sort(TVector<TLine<unsigned int, std::string> > & vct, unsigned int max);
 
 int main() {
-	// Ускорение
+	// РЈСЃРєРѕСЂРµРЅРёРµ
 	std::ios_base::sync_with_stdio(false);
 	std::cin.tie(NULL);
 
 	unsigned int max = 0, key;
 
 	std::string * val = new std::string;
-	// Объект
+	// РћР±СЉРµРєС‚
 	TVector<TLine<unsigned int, std::string> > vct;
 	while (std::cin >> key >> *val) {
-		// Нахождения максимума
+		// РќР°С…РѕР¶РґРµРЅРёСЏ РјР°РєСЃРёРјСѓРјР°
 		if (key > max) {
 			max = key;
 		}
 		
-		// Заполнение линии
+		// Р—Р°РїРѕР»РЅРµРЅРёРµ Р»РёРЅРёРё
 		TLine<unsigned int, std::string> *newLine = new TLine<unsigned int, std::string>;
 		newLine->key = key;
 		newLine->value = val;
 		val = new std::string;
-		// Добавление в вектор нашей линии
+		// Р”РѕР±Р°РІР»РµРЅРёРµ РІ РІРµРєС‚РѕСЂ РЅР°С€РµР№ Р»РёРЅРёРё
 		vct.PushBack(*newLine);
 	}
 	delete val;
