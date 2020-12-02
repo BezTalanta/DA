@@ -158,3 +158,24 @@ TNode * AddNode(TNode * startNode, TNode * newNode) {
 
 	return startNode;
 }
+
+void NodeDelete(TNode * node){
+	std::cout << "Delete it: " << node->key << '\n';
+	if(!node){
+		return;
+	}
+
+	int nodeInd = node->ind;
+	if(node->left->ind > nodeInd){
+		NodeDelete(node->left);
+	}
+
+	if(node->right != nullptr && node->right->ind > nodeInd){
+		std::cout << "I am at the second int!\n";
+		NodeDelete(node->right);
+	}
+
+	std::cout << "I am close to delete it!\n";
+	delete node;
+	std::cout << "And i am deleted it!\n";
+}
