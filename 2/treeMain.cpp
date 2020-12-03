@@ -10,47 +10,47 @@ int & GetMin(int & a, int & b) {
 	return a;
 }
 
-int FindDif(TNode * a, TNode * b,bool & isLeftForNew, int endInd = -1) {
-	int startInd = a->ind + 1;
-	if (endInd == -1) {
-		endInd = GetMin(a->sizeOfKey,b->sizeOfKey) * BYTES_OF_ONE_CHAR;
-	}
-	else {
-		endInd--;
-	}
-
-	char * ca = a->key, * cb = b->key;
-	int numberOfChar = startInd / BYTES_OF_ONE_CHAR; // Какой символ из ключа будем брать
-	int numberOfLetter = startInd % BYTES_OF_ONE_CHAR; // Какой бит из символа будем брать
-	if (numberOfLetter == 0 && numberOfChar > 0) {
-		numberOfChar -= 1;
-		numberOfLetter = USE_FOR_BYTES;
-	}
-	while (startInd<= endInd) {
-		int right = ((cb[numberOfChar] >> (BYTES_OF_ONE_CHAR - numberOfLetter)) & 1);
-		if (((ca[numberOfChar] >> (BYTES_OF_ONE_CHAR - numberOfLetter)) & 1) != right) {
-			if (right) {
-				isLeftForNew = false;
-			}
-			else {
-				isLeftForNew = true;
-			}
-			break;
-		}
-
-		numberOfLetter++;
-		if (numberOfLetter == 6) {
-			numberOfChar += 1;
-			numberOfLetter = 1;
-		}
-		startInd++;
-	}
-
-	if (startInd > endInd) {
-		return -1;
-	}
-	return startInd;
-}
+//int FindDif(TNode * a, TNode * b,bool & isLeftForNew, int endInd = -1) {
+//	int startInd = a->ind + 1;
+//	if (endInd == -1) {
+//		endInd = GetMin(a->sizeOfKey,b->sizeOfKey) * BYTES_OF_ONE_CHAR;
+//	}
+//	else {
+//		endInd--;
+//	}
+//
+//	char * ca = a->key, * cb = b->key;
+//	int numberOfChar = startInd / BYTES_OF_ONE_CHAR; // Какой символ из ключа будем брать
+//	int numberOfLetter = startInd % BYTES_OF_ONE_CHAR; // Какой бит из символа будем брать
+//	if (numberOfLetter == 0 && numberOfChar > 0) {
+//		numberOfChar -= 1;
+//		numberOfLetter = USE_FOR_BYTES;
+//	}
+//	while (startInd<= endInd) {
+//		int right = ((cb[numberOfChar] >> (BYTES_OF_ONE_CHAR - numberOfLetter)) & 1);
+//		if (((ca[numberOfChar] >> (BYTES_OF_ONE_CHAR - numberOfLetter)) & 1) != right) {
+//			if (right) {
+//				isLeftForNew = false;
+//			}
+//			else {
+//				isLeftForNew = true;
+//			}
+//			break;
+//		}
+//
+//		numberOfLetter++;
+//		if (numberOfLetter == 6) {
+//			numberOfChar += 1;
+//			numberOfLetter = 1;
+//		}
+//		startInd++;
+//	}
+//
+//	if (startInd > endInd) {
+//		return -1;
+//	}
+//	return startInd;
+//}
 
 int FindZero(int t) {
 	// I variation
@@ -130,10 +130,11 @@ int GetDifference(TNode * a, TNode * b, bool & isOneForNewNode) {
 	// Find the difference between two chars of different lengths
 	char getLastChar;
 	if (acLen < bcLen) {
-		getLastChar = bc[indOfWord + 1];
+		getLastChar = bc[indOfWord + 1]-96;
+		isOneForNewNode = true;
 	}
 	else {
-		getLastChar = ac[indOfWord + 1];
+		getLastChar = ac[indOfWord + 1]-96;
 	}
 
 	if (getLastChar >= 16) return (indOfWord + 1) * BYTES_OF_ONE_CHAR + 1;
@@ -154,21 +155,27 @@ TNode * SearchNode(TNode * startNode, char * key) {
 		int indOfWord = curInd / BYTES_OF_ONE_CHAR, indOfLetter = curInd % BYTES_OF_ONE_CHAR;
 		if (indOfLetter == 0) indOfWord -= 1,indOfLetter = BYTES_OF_ONE_CHAR;
 
+		if (curInd > maxInd) {
+			key[indOfWord] = '\0';
+		}
+
 		if ((key[indOfWord] >> (BYTES_OF_ONE_CHAR - indOfLetter)) & 1) {
-			if (curNode->right->ind <= maxInd) { // Neyveren v etom
-				curNode = curNode->right;
-			}
-			else {
-				break;
-			}
+			//if (curNode->right->ind <= maxInd) { // Neyveren v etom
+			//	curNode = curNode->right;
+			//}
+			//else {
+			//	break;
+			//}
+			curNode = curNode->right;
 		}
 		else {
-			if (curNode->left->ind <= maxInd) { // Neyveren v etom
-				curNode = curNode->left;
-			}
-			else {
-				break;
-			}
+			//if (curNode->left->ind <= maxInd) { // Neyveren v etom
+			//	curNode = curNode->left;
+			//}
+			//else {
+			//	break;
+			//}
+			curNode = curNode->left;
 		}
 
 		prevInd = curInd;
@@ -330,6 +337,7 @@ void NodeDelete(TNode * node) {
 
 // aa ahb ahc ap apr
 // aa ao ag ae af ad
+// abp abpp abppp
 
 void PrintTree(TNode * root, int line) {
 	if (!root) {

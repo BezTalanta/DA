@@ -55,32 +55,25 @@ int main()
 	return 0;*/
 	//char t[256],t2[256];
 
-	char * t = new char[256];
-	TNode *mainTree =  nullptr;
-	//TNode * test = new TNode,* test2 = new TNode;
-	TNode * node;
-	while (std::cin >> t && t[0] != '\x4') {
-		node = new TNode;
-		node->key = t;
-		mainTree = InsertNode(mainTree, node);
-		t = new char[256];
-	}
+	// WORKED
 
-	/*std::cin >> t;
-	test->key = t;
-	test->sizeOfKey = strlen(t);
+	//char * t = new char[256];
+	//TNode *mainTree =  nullptr;
+	////TNode * test = new TNode,* test2 = new TNode;
+	//TNode * node;
+	//while (std::cin >> t && t[0] != '\x4') {
+	//	node = new TNode;
+	//	node->key = t;
+	//	mainTree = InsertNode(mainTree, node);
+	//	t = new char[256];
+	//}
+	//delete[] t;
+	//PrintTree(mainTree,1);
+	//NodeDelete(mainTree);
+	//return 0;
 
-	std::cin >> t2;
-	test2->key = t2;
-	test2->sizeOfKey = strlen(t2);*/
-
-	/*tree2 = InsertNode(tree2, test);
-	tree2 = InsertNode(tree2, test2);*/
-	PrintTree(mainTree,1);
-	NodeDelete(mainTree);
-	return 0;
 	TNode * tree = nullptr;
-	char command[sizeOfChars] = "";
+	char * command = new char[MAX_SIZE_OF_CHARS];
 	while (std::cin >> command) {
 		if (command[0] == '+') {
 			std::cin >> command;	
@@ -89,14 +82,34 @@ int main()
 				command[i] = tolower(command[i]);
 			}			
 
-			/*ull in;
-			std::cin >> in;*/
+			ull in;
+			std::cin >> in;
+			TNode * newNode = new TNode;
+			newNode->value = in;
+			newNode->key = command;
+			tree = InsertNode(tree, newNode);
 		}
-		else if (command[0] == 'q') {
-			std::cin >> command;
-			int converted = (int)command;
-			std::cout << converted << '\n';
+		else if (command[0] == '$') {
+			PrintTree(tree, 1);
 		}
+		else {
+			for (int i = 0; i < strlen(command); i++)
+			{
+				command[i] = tolower(command[i]);
+			}
+			TNode * foundNode = SearchNode(tree, command);
+			if (foundNode && strcmp(foundNode->key,command) == 0) {
+				std::cout << foundNode->value << '\n';
+			}
+			else {
+				std::cout << "Error: couldn't find node!\n";
+			}
+		}
+
+		command = new char[MAX_SIZE_OF_CHARS];
 	}
+	delete[] command;
+
+	NodeDelete(tree);
 	return 0;
 }

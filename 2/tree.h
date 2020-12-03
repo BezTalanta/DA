@@ -5,14 +5,15 @@ const int MAX_SIZE_OF_CHARS = 256;
 using ull = unsigned long long;
 
 struct TNode {
-	struct TNode *left, *right, *parent; // Указатели на листья
-	int ind, sizeOfKey; // Какой проверяем индекс в бинарном числе
+	struct TNode *left, *right; // Указатели на листья
+	int ind; // Какой проверяем индекс в бинарном числе
 	//char key[MAX_SIZE_OF_CHARS]; // Ключ
 	char * key; // Ключ
 	ull value; // Само значение
 
 	~TNode() {
 		std::cout << "I am deleted!\n";
+		delete[] key;
 	}
 
 	bool operator==(TNode * t) {
@@ -27,7 +28,7 @@ int FindZero(int t);
 // Ф-ия добавления узла в дерево
 //void AddNode(TNode * startNode, TNode * newNode);
 TNode * AddNode(TNode * startNode, TNode * newNode);
-
+TNode * SearchNode(TNode * startNode, char * key);
 TNode * InsertNode(TNode * startNode, TNode * newNode);
 
 void NodeDelete(TNode * node);
