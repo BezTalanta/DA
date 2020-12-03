@@ -16,7 +16,7 @@ struct TNode {
 	}
 
 	bool operator==(TNode * t) {
-		if (*key == *t->key) return true;
+		if (strcmp(t->key,key) == 0) return true;
 		return false;
 	}
 };
@@ -27,6 +27,11 @@ int FindZero(int t);
 // Ф-ия добавления узла в дерево
 //void AddNode(TNode * startNode, TNode * newNode);
 TNode * AddNode(TNode * startNode, TNode * newNode);
+
+TNode * InsertNode(TNode * startNode, TNode * newNode);
+
+void NodeDelete(TNode * node);
+void PrintTree(TNode * root, int line);
 
 /*
            TEST {1} 82

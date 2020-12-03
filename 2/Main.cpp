@@ -43,23 +43,41 @@ int main()
 		std::cout << (char)i << ": ";
 		GOBit(i-96);
 	}	*/
-	/*bool v = false;
-	Test(v);
-	std::cout << v << '\n';
+
+	/*char * cyka = new char[5];
+	std::cin >> cyka;
+	std::cout << cyka << '\n';
 	return 0;*/
-	char t[256],t2[256];
-	std::cin >> t;
-	TNode *tree2 =  nullptr;
-	TNode * test = new TNode,* test2 = new TNode;
+
+	/*bool v = false;
+	Test(v);*/
+	/*std::cout << v << '\n';
+	return 0;*/
+	//char t[256],t2[256];
+
+	char * t = new char[256];
+	TNode *mainTree =  nullptr;
+	//TNode * test = new TNode,* test2 = new TNode;
+	TNode * node;
+	while (std::cin >> t && t[0] != '\x4') {
+		node = new TNode;
+		node->key = t;
+		mainTree = InsertNode(mainTree, node);
+		t = new char[256];
+	}
+
+	/*std::cin >> t;
 	test->key = t;
 	test->sizeOfKey = strlen(t);
 
 	std::cin >> t2;
 	test2->key = t2;
-	test2->sizeOfKey = strlen(t2);
-	/*bool isTest = (*test2 == test);*/
-	tree2 = AddNode(tree2, test);
-	tree2 = AddNode(tree2, test2);
+	test2->sizeOfKey = strlen(t2);*/
+
+	/*tree2 = InsertNode(tree2, test);
+	tree2 = InsertNode(tree2, test2);*/
+	PrintTree(mainTree,1);
+	NodeDelete(mainTree);
 	return 0;
 	TNode * tree = nullptr;
 	char command[sizeOfChars] = "";
