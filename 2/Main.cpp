@@ -74,9 +74,9 @@ int main()
 
 	TNode * tree = nullptr;
 	char * command = new char[MAX_SIZE_OF_CHARS];
-	while (std::cin >> command) {
+	while (std::cin >> command && command[0] != '\x4') {
 		if (command[0] == '+') {
-			std::cin >> command;	
+			std::cin >> command;
 			for (int i = 0; i < strlen(command); i++)
 			{
 				command[i] = tolower(command[i]);
@@ -92,6 +92,16 @@ int main()
 		else if (command[0] == '$') {
 			PrintTree(tree, 1);
 		}
+		else if (command[0] == '-') {
+			std::cin >> command;
+			for (int i = 0; i < strlen(command); i++)
+			{
+				command[i] = tolower(command[i]);
+			}
+			tree = DeleteNode(tree, command);
+
+			delete[] command;
+		}
 		else {
 			for (int i = 0; i < strlen(command); i++)
 			{
@@ -104,12 +114,13 @@ int main()
 			else {
 				std::cout << "Error: couldn't find node!\n";
 			}
+			delete[] command;
 		}
 
 		command = new char[MAX_SIZE_OF_CHARS];
 	}
 	delete[] command;
 
-	NodeDelete(tree);
+	TreeDelete(tree);
 	return 0;
 }

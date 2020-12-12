@@ -10,94 +10,6 @@ int & GetMin(int & a, int & b) {
 	return a;
 }
 
-//int FindDif(TNode * a, TNode * b,bool & isLeftForNew, int endInd = -1) {
-//	int startInd = a->ind + 1;
-//	if (endInd == -1) {
-//		endInd = GetMin(a->sizeOfKey,b->sizeOfKey) * BYTES_OF_ONE_CHAR;
-//	}
-//	else {
-//		endInd--;
-//	}
-//
-//	char * ca = a->key, * cb = b->key;
-//	int numberOfChar = startInd / BYTES_OF_ONE_CHAR; // Какой символ из ключа будем брать
-//	int numberOfLetter = startInd % BYTES_OF_ONE_CHAR; // Какой бит из символа будем брать
-//	if (numberOfLetter == 0 && numberOfChar > 0) {
-//		numberOfChar -= 1;
-//		numberOfLetter = USE_FOR_BYTES;
-//	}
-//	while (startInd<= endInd) {
-//		int right = ((cb[numberOfChar] >> (BYTES_OF_ONE_CHAR - numberOfLetter)) & 1);
-//		if (((ca[numberOfChar] >> (BYTES_OF_ONE_CHAR - numberOfLetter)) & 1) != right) {
-//			if (right) {
-//				isLeftForNew = false;
-//			}
-//			else {
-//				isLeftForNew = true;
-//			}
-//			break;
-//		}
-//
-//		numberOfLetter++;
-//		if (numberOfLetter == 6) {
-//			numberOfChar += 1;
-//			numberOfLetter = 1;
-//		}
-//		startInd++;
-//	}
-//
-//	if (startInd > endInd) {
-//		return -1;
-//	}
-//	return startInd;
-//}
-
-int FindZero(int t) {
-	// I variation
-	/*int curNum = MAX_NUMBER_OF_BYTES;
-	for (int i = 0; i < 7; i++)
-	{
-		int check = t - curNum;
-		if (check < 0) {
-			return i;
-		}
-
-		t = check;
-		curNum /= 2;
-	}
-
-	return -1;*/
-
-	// II variation (faster )
-	for (int i = 0; i < 7; i++)
-	{
-		char newI = t >> (6 - i) | USE_FOR_BYTES;
-		if (newI == USE_FOR_BYTES) {
-			return i;
-		}
-	}
-	return -1;
-}
-
-//TNode * SearchNode(TNode * CurNode, char * key) {
-//	if (!CurNode) {
-//		return nullptr;
-//	}
-//
-//	if (CurNode->key == key) {
-//		return CurNode;
-//	}
-//
-//	int curInd = CurNode->ind;
-//	int indOfWord = curInd / 7, indOfLetter = curInd % 7;
-//	if ((key[indOfWord] >> (6 - indOfLetter)) & 1) {
-//		return SearchNode(CurNode->right,key);
-//	}
-//	else {
-//		return SearchNode(CurNode->left, key);
-//	}
-//}
-
 int GetDifference(TNode * a, TNode * b, bool & isOneForNewNode) {
 	char *ac = a->key, *bc = b->key;
 	int acLen = strlen(ac), bcLen = strlen(bc);
@@ -144,16 +56,110 @@ int GetDifference(TNode * a, TNode * b, bool & isOneForNewNode) {
 	return (indOfWord + 1) * BYTES_OF_ONE_CHAR + 5;
 }
 
+TNode * SearchNode(TNode * needToFoundOwner,bool & isLeaf, bool & isLeftForFoundNode) {
+	char * keyIn = needToFoundOwner->key;
+	
+	int prevInd = -1;
+	if (needToFoundOwner->ind == 0) {
+		needToFoundOwner = needToFoundOwner->left;
+		prevInd = 0;
+	}
+
+	int curInd = needToFoundOwner->ind;
+	while (curInd > prevInd) {
+		int indOfWord = curInd / BYTES_OF_ONE_CHAR, indOfLetter = curInd % BYTES_OF_ONE_CHAR;
+		if (indOfLetter == 0) { indOfWord--, indOfLetter = BYTES_OF_ONE_CHAR; }
+	
+		if ((keyIn[indOfWord] >> (BYTES_OF_ONE_CHAR - indOfLetter)) & 1) {
+			if (strcmp(needToFoundOwner->right->key, keyIn) == 0) {
+				if (prevInd == -1) {
+					isLeaf = true;
+				}
+	
+				isLeftForFoundNode = false;
+				return needToFoundOwner;
+			}
+	
+			needToFoundOwner = needToFoundOwner->right;
+		}
+		else {
+			if (strcmp(needToFoundOwner->left->key,keyIn) == 0) {
+				if (prevInd == -1) {
+					isLeaf = true;
+				}
+	
+				isLeftForFoundNode = true;
+				return needToFoundOwner;
+			}
+	
+			needToFoundOwner = needToFoundOwner->left;
+		}
+	
+		prevInd = curInd;
+		curInd = needToFoundOwner->ind;
+	}
+
+	return needToFoundOwner;
+}
+
+//TNode * SearchNode(TNode * startNode, TNode & prevNode, bool & isLeaf) {
+//	if (!startNode) {
+//		return nullptr;
+//	}
+//
+//	char * keyIn = startNode->key;
+//
+//	if (startNode->ind == 0) {
+//		startNode = startNode->left;
+//	}
+//
+//	int curInd = startNode->ind, prevInd = -1;
+//	while (curInd > prevInd) {
+//		int indOfWord = curInd / BYTES_OF_ONE_CHAR, indOfLetter = curInd % BYTES_OF_ONE_CHAR;
+//		if (indOfLetter == 0) { indOfWord--, indOfLetter = BYTES_OF_ONE_CHAR; }
+//
+//		if ((keyIn[indOfWord] >> (BYTES_OF_ONE_CHAR - indOfLetter)) & 1) {
+//			if (strcmp(startNode->right->key, keyIn) == 0) {
+//				if (prevInd == -1) {
+//					isLeaf = true;
+//				}
+//
+//				prevNode = *startNode;
+//				return startNode->right;
+//			}
+//
+//			startNode = startNode->right;
+//		}
+//		else {
+//			if (strcmp(startNode->left->key,keyIn) == 0) {
+//				if (prevInd == -1) {
+//					isLeaf = true;
+//				}
+//
+//				prevNode = *startNode;
+//				return startNode->left;
+//			}
+//
+//			startNode = startNode->left;
+//		}
+//
+//		prevInd = curInd;
+//		curInd = startNode->ind;
+//	}
+//
+//	return nullptr;
+//}
+
 TNode * SearchNode(TNode * startNode, char * key) {
 	if (!startNode) {
 		return nullptr;
 	}
 
-	TNode * curNode = startNode->left;
+	TNode * curNode = startNode->left, * prevNode = startNode;
 	int prevInd = 0, curInd = curNode->ind, maxInd = strlen(key) * BYTES_OF_ONE_CHAR;
 	while (curInd > prevInd) {
 		int indOfWord = curInd / BYTES_OF_ONE_CHAR, indOfLetter = curInd % BYTES_OF_ONE_CHAR;
-		if (indOfLetter == 0) indOfWord -= 1,indOfLetter = BYTES_OF_ONE_CHAR;
+		if (indOfLetter == 0) indOfWord--,indOfLetter = BYTES_OF_ONE_CHAR;
 
 		if (curInd > maxInd) {
 			key[indOfWord] = '\0';
@@ -166,6 +172,7 @@ TNode * SearchNode(TNode * startNode, char * key) {
 			//else {
 			//	break;
 			//}
+			prevNode = curNode;
 			curNode = curNode->right;
 		}
 		else {
@@ -175,12 +182,17 @@ TNode * SearchNode(TNode * startNode, char * key) {
 			//else {
 			//	break;
 			//}
+			prevNode = curNode;
 			curNode = curNode->left;
 		}
 
 		prevInd = curInd;
 		curInd = curNode->ind;
 	}
+
+	/*if (&prevFind) {
+		prevFind = *prevNode;
+	}*/
 
 	return curNode;
 }
@@ -189,6 +201,7 @@ TNode * InsertNode(TNode * startNode, TNode * newNode) {
 	if (!startNode) {
 		newNode->left = newNode;
 		newNode->right = nullptr;
+		newNode->parent = nullptr;
 		newNode->ind = 0;
 		std::cout << "OK\n";
 		return newNode;
@@ -200,8 +213,8 @@ TNode * InsertNode(TNode * startNode, TNode * newNode) {
 		return startNode;
 	}
 
-	// Бул для того, чтобы сразу знать направление правой стрелки нового нода
-	bool isOneForNewNode = false; // Bool in order know the direction of the right arrow of the newNode
+	// Bool in order know the direction of the right arrow of the newNode
+	bool isOneForNewNode = false;
 	int dif = GetDifference(foundNode,newNode,isOneForNewNode);
 	std::cout << "Dif ind: " << dif << ' ';
 	newNode->ind = dif;
@@ -210,7 +223,9 @@ TNode * InsertNode(TNode * startNode, TNode * newNode) {
 	int prevInd = 0, curInd = curN->ind;
 	bool isPrevLeftEqualCurrent = true;
 	char * c = newNode->key;
-	while (curInd > prevInd && curInd < dif) { // Finding a pair of nodes for inserting a newNode
+
+	// Finding a pair of nodes for inserting a newNode
+	while (curInd > prevInd && curInd < dif) {
 		int indOfWord = curInd / BYTES_OF_ONE_CHAR, indOfLetter = curInd % BYTES_OF_ONE_CHAR;
 		if (indOfLetter == 0) indOfWord -= 1, indOfLetter = BYTES_OF_ONE_CHAR;
 
@@ -250,73 +265,156 @@ TNode * InsertNode(TNode * startNode, TNode * newNode) {
 			newNode->right = curN;
 		}
 	}
+	newNode->parent = prevN;
+
+	if (curN->ind > prevN->ind) {
+		curN->parent = newNode;
+	}	
 
 	std::cout << "OK\n";
 	return startNode;
 }
 
-//TNode * AddNode(TNode * startNode, TNode * newNode) {
-//	if (!startNode) {
-//		newNode->ind = 0;
-//		newNode->right = nullptr;
-//		newNode->left = newNode;
-//		return newNode;
-//	}	
-// 
-//	if (startNode->left == startNode) {
-//		bool isLeftForNew = false;
-//		int lel = FindDif(startNode, newNode, isLeftForNew);
-//		if (isLeftForNew) {
-//			newNode->left = newNode;
-//			newNode->right = startNode;
-//		}
-//		else {
-//			newNode->left = startNode;
-//			newNode->right = newNode;
-//		}
-//		newNode->ind = lel;
-//		newNode->parent = startNode;
-//		startNode->left = newNode;
-//		startNode->parent = newNode;
-//		return startNode;
-//	}
-//
-//	return startNode;
-//	char * newKey = newNode->key;
-//	TNode * curNode = startNode->left;
-//	int prevInd = 0;
-//	//int curInd = curNode->ind;
-//	while (true) {
-//		if (*curNode == newNode) {
-//			std::cout << "Error!\n";
-//			break;
-//		}
-//
-//		int curInd = curNode->ind;
-//		if (curInd <= prevInd) {
-//
-//			break;
-//		}
-//
-//		int indOfWord = curInd / BYTES_OF_ONE_CHAR, indOfLetter = curInd % BYTES_OF_ONE_CHAR;
-//		if (indOfLetter == 0) {
-//			indOfWord -= 1;
-//		}
-//
-//		if ((newKey[indOfWord] >> (BYTES_OF_ONE_CHAR - indOfLetter) & 1)) {
-//			curNode = curNode->right;
-//		}
-//		else {
-//			curNode = curNode->left;
-//		}
-//
-//		prevInd = curInd;
-//	}
-//
-//	return startNode;
-//}
+TNode * DeleteNode(TNode * startNode, char * keyIn) { // a w q p
+	if (!startNode) {
+		std::cout << "Error: tree is empty!\n";
+		return startNode;
+	}
+	
+	if (startNode->left == startNode) {
+		delete startNode;
+		std::cout << "Ok!\n";
+		return nullptr;
+	}
 
-void NodeDelete(TNode * node) {
+	TNode * foundNode = SearchNode(startNode,keyIn);
+	if (strcmp(foundNode->key, keyIn) != 0) {
+		std::cout << "Error: can't find " << keyIn << " node!\n";
+		return startNode;
+	}
+
+	if (foundNode == startNode) { 
+		bool isLeafTmp = false, isLeftForNodeTmp = false;
+		TNode * foundNodeNew = SearchNode(foundNode, isLeafTmp, isLeftForNodeTmp);
+
+		bool isLeafTmp2 = false, isLeftForNodeTmp2 = false;
+		TNode * foundNodeNew2 = SearchNode(foundNodeNew, isLeafTmp2, isLeftForNodeTmp2);
+
+		if (foundNodeNew->parent != startNode) { // Узел на хед не левый узел хеда
+			if (isLeftForNodeTmp) { // Узел на хед идет указатель слева
+				if (foundNodeNew->parent->right == foundNodeNew) { // Отец узла идет вправо для нахождения нашего узла
+					if (!isLeafTmp2) { // Узел на найденный узел не лист
+						foundNodeNew->parent->right = foundNodeNew->right;
+						foundNodeNew->right->parent = foundNodeNew->parent;
+					}
+					else {
+						foundNodeNew->parent->right = startNode;
+					}
+				}
+				else { // Отец узла идет влево для нахождения нашего узла
+					if (!isLeafTmp2) { // Узел на узел не лист
+						foundNodeNew->parent->left = foundNodeNew->right;
+						foundNodeNew->right->parent = foundNodeNew->parent;
+					}
+					else {
+						foundNodeNew->parent->left = startNode;
+					}
+				}
+			}
+			else { // Узел на хед идет указатель слева
+				if (foundNodeNew->parent->right == foundNodeNew) { // Отец узла идет вправо для нашего узла
+					if (!isLeafTmp2) { // Лист узел на узел
+						foundNodeNew->parent->right = foundNodeNew->left;
+						foundNodeNew->left->parent = foundNodeNew->parent;
+					}
+					else{
+						foundNodeNew->parent->right = startNode;
+					}
+				}
+				else { // Отец узла идет влево для нашего узла
+					if (!isLeafTmp2) {
+						foundNodeNew->parent->left = foundNodeNew->left;
+						foundNodeNew->left->parent = foundNodeNew->parent;
+					}
+					else {
+						foundNodeNew->parent->left = startNode;
+					}
+				}
+			}
+
+			startNode->Set(foundNodeNew->key);
+			startNode->value = foundNodeNew->value;
+			
+			delete foundNodeNew;
+
+			if (isLeftForNodeTmp2) {
+				foundNodeNew2->left = startNode;
+			}
+			else {
+				foundNodeNew2->right = startNode;
+			}
+
+			std::cout << "Ok\n";
+			return startNode;
+		}
+		else {
+			foundNodeNew->ind = 0;
+			if (isLeftForNodeTmp) {
+				foundNodeNew->left = foundNodeNew->right;
+			}
+
+			foundNodeNew->right = nullptr;
+			foundNodeNew->parent = nullptr;
+			delete startNode;
+			std::cout << "Ok\n";
+			return foundNodeNew;
+		}
+	}
+
+	bool isLeaf = false, isLeftForNode = false;
+	TNode * foundNodeNew = SearchNode(foundNode, isLeaf, isLeftForNode);
+	while (!isLeaf) {
+		foundNode->Set(foundNodeNew->key);
+		foundNode->value = foundNodeNew->value;
+		foundNode = foundNodeNew;
+
+		foundNodeNew = SearchNode(foundNode, isLeaf, isLeftForNode);
+	}	
+
+	if (isLeftForNode) {
+		TNode * justCheck = foundNodeNew->parent;
+		if (justCheck->left == foundNodeNew) {
+			justCheck->left = foundNodeNew->right;
+		}
+		else {
+			justCheck->right = foundNodeNew->right;
+		}
+	}
+	else {
+		TNode * justCheck = foundNodeNew->parent;
+		if (justCheck->left == foundNodeNew) {
+			justCheck->left = foundNodeNew->left;
+		}
+		else {
+			justCheck->right = foundNodeNew->left;
+		}
+	}
+
+
+	delete foundNodeNew;
+
+	std::cout << "Ok\n";
+
+	/*std::cout << "Del func found node:\nkey: " << foundNode->key << "\nid: " << foundNode->ind << "\null: " << foundNode->value << "\n\n";
+	std::cout << "Del func found prev node:\nkey: " << foundNodeNew->key << "\nid: " << foundNodeNew->ind << "\null: " << foundNodeNew->value << '\n';
+
+	std::cout << "Is " << foundNodeNew->key << " leaf: "<< (bool)isLeaf << '\n';
+	std::cout << "Left for " << foundNodeNew->key << " is: " << foundNode->key << " is-> " << (bool)isLeftForNode << '\n';*/
+
+	return startNode;
+}
+
+void TreeDelete(TNode * node) {
 	std::cout << "Delete it: " << node->key << '\n';
 	if (!node) {
 		return;
@@ -324,11 +422,11 @@ void NodeDelete(TNode * node) {
 
 	int nodeInd = node->ind;
 	if (node->left->ind > nodeInd) {
-		NodeDelete(node->left);
+		TreeDelete(node->left);
 	}
 
 	if (node->right != nullptr && node->right->ind > nodeInd) {
-		NodeDelete(node->right);
+		TreeDelete(node->right);
 	}
 
 	std::cout << node->key << ": Successfully deleted\n";
@@ -346,7 +444,14 @@ void PrintTree(TNode * root, int line) {
 
 	std::cout << line << ".\t" << root->key << " (" << root->ind << ", \"" << root->left->key << "\", ";
 	if (root->right != nullptr) {
-		std::cout << "\"" << root->right->key << "\")\n";
+		std::cout << "\"" << root->right->key << "\", ";
+	}
+	else {
+		std::cout << "\"nullptr\", ";
+	}
+
+	if (root->parent != nullptr) {
+		std::cout << "\"" << root->parent->key << "\")\n";
 	}
 	else {
 		std::cout << "\"nullptr\")\n";
@@ -354,10 +459,12 @@ void PrintTree(TNode * root, int line) {
 
 	int ind = root->ind;
 	if (root->right != nullptr && root->right->ind > ind) {
-		PrintTree(root->right, ++line);
+		line++;
+		PrintTree(root->right, line);
 	}
 
 	if (root->left->ind > ind) {
-		PrintTree(root->left, ++line);
+		line++;
+		PrintTree(root->left, line);
 	}
 }
