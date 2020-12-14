@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <cstring>
 const int MAX_SIZE_OF_CHARS = 256;
 
 using ull = unsigned long long;
@@ -12,7 +13,7 @@ struct TNode {
 	ull value; // Само значение
 
 	~TNode() {
-		std::cout << "I am deleted!\n";
+		//std::cout << key << " deleted!\n";
 		delete[] key;
 	}
 
@@ -43,20 +44,5 @@ TNode * InsertNode(TNode * startNode, TNode * newNode);
 TNode * DeleteNode(TNode * startNode, char * keyIn);
 
 void TreeDelete(TNode * node);
-void PrintTree(TNode * root, int line);
-
-/*
-           TEST {1} 82
-							81 (1)
-			70 (2)
-	65(5)			*90 (3)
-			   
-*/
-
-/*
-		   TEST {1} 82
-							81 (1)
-			70 (2)
-	65(5)			*90 (3)
-
-*/
+void PrintTree(TNode * root, int space);
+//void PrintTree(TNode * root, int line);

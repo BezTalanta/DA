@@ -2,6 +2,7 @@
 #include <string>
 #include <stdio.h>
 #include "tree.h"
+#include <time.h>
 
 using ull = unsigned long long;
 
@@ -10,7 +11,6 @@ const int sizeOfChars = 256;
 /*
 	a - 97 -> 1100001
 	z - 122 -> 1111010
-
 	A - 65 -> 1000001
 	Z - 90 -> 1011010
 */
@@ -37,6 +37,7 @@ void Test(bool & a) {
 
 int main()
 {	
+	time_t start = clock();
 	setlocale(LC_ALL, "rus");
 	/*for (int i = 97; i < 123; i++)
 	{
@@ -90,7 +91,8 @@ int main()
 			tree = InsertNode(tree, newNode);
 		}
 		else if (command[0] == '$') {
-			PrintTree(tree, 1);
+			PrintTree(tree, 0);
+			delete[] command;
 		}
 		else if (command[0] == '-') {
 			std::cin >> command;
@@ -122,5 +124,8 @@ int main()
 	delete[] command;
 
 	TreeDelete(tree);
+
+	time_t end = clock();
+	std::cout << "Your work time: " << (double)(end-start)/CLOCKS_PER_SEC << '\n';
 	return 0;
 }
