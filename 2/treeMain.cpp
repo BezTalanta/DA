@@ -193,13 +193,15 @@ TNode * SearchNode(TNode * startNode, char * key) {
 	return curNode;
 }
 
-TNode * InsertNode(TNode * startNode, TNode * newNode) {
+TNode * InsertNode(TNode * startNode, TNode * newNode, bool needOK) {
 	if (!startNode) {
 		newNode->left = newNode;
 		newNode->right = nullptr;
 		newNode->parent = nullptr;
 		newNode->ind = 0;
-		std::cout << "OK\n";
+		if(needOK){
+			std::cout << "OK\n";
+		}
 		globalCountOfNodes++;
 		return newNode;
 	}
@@ -269,7 +271,9 @@ TNode * InsertNode(TNode * startNode, TNode * newNode) {
 		curN->parent = newNode;
 	}	
 
-	std::cout << "OK\n";
+	if(needOK){
+		std::cout << "OK\n";
+	}
 	globalCountOfNodes++;
 	return startNode;
 }
@@ -343,7 +347,6 @@ TNode * DeleteNode(TNode * startNode, char * keyIn) {
 	if(parentOfSecondNode->left == foundNodeNew){ // Родитель второго узла указывает на него налево
 		//std::cout << "Flag1 ";
 		if(isLeafTmp2){ // 1 случай
-			//std::cout << "Leaf\n";
 			parentOfSecondNode->left = foundNode;
 		}
 		else{
@@ -419,7 +422,7 @@ void TreeDelete(TNode * node) {
 		TreeDelete(node->right);
 	}
 
-	std::cout << node->key << ": Successfully deleted\n";
+	//std::cout << node->key << ": Successfully deleted\n";
 	delete node;
 }
 
@@ -516,14 +519,13 @@ void Save(TNode * startNode, std::ofstream & file){
 
 TNode * Load(std::ifstream & file){
 	TNode * tree = nullptr;
-	char * line = new char[1000]{'\0'};
+	char * line = new char[1000];
 	while(file.getline(line,1000)){
 		TNode * newNode = new TNode;
 		char * kek = new char[MAX_SIZE_OF_CHARS] {'\0'};
 		int indOfKek = 0,state = -1;
 		for (int i = 0; i < strlen(line); ++i)
 		{
-			std::cout << "Checking: " << line[i] << '\n';
 			if(line[i] == ' ' || line[i] == '\n'){
 				state++;
 				indOfKek = 0;
@@ -536,7 +538,7 @@ TNode * Load(std::ifstream & file){
 
 			if(state == 0){
 				newNode->key = kek;
-				std::cout << "Load: key: " << newNode->key << "_\n";
+				//std::cout << "Load: key: " << newNode->key << "_\n";
 			}
 			else if(state == 1){
 				newNode->ind = 0;
@@ -556,18 +558,18 @@ TNode * Load(std::ifstream & file){
 					newNode->value *= 10;
 					newNode->value += kek[i] - '0';
 				}
-				std::cout << "Load: val: " << newNode->value << '\n';
+				//std::cout << "Load: val: " << newNode->value << '\n';
 				delete[] kek;
 			}
 			else{
 				delete[] kek;
 			}
 			
-			kek = new char[MAX_SIZE_OF_CHARS];
+			kek = new char[MAX_SIZE_OF_CHARS] {'\0'};
 		}
 
 		delete[] kek;
-		tree = InsertNode(tree, newNode);
+		tree = InsertNode(tree, newNode, false);
 	}
 
 	delete[] line;

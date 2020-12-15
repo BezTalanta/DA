@@ -125,8 +125,8 @@ int main(int c, char * v[])
 				else{
 					Save(tree,file);
 					file.close();
+					std::cout << "OK\n";
 				}
-				//std::cout << "\tAll OK\n";
 			}
 			else if(strcmp(command,"Load") == 0){
 				delete[] command;
@@ -141,6 +141,7 @@ int main(int c, char * v[])
 					TreeDelete(tree);
 					tree = Load(file);
 					file.close();
+					std::cout << "OK\n";
 				}
 			}
 			delete[] command;

@@ -34,7 +34,7 @@ extern int globalCountOfNodes;
 TNode * SearchNode(TNode * startNode, char * key);
 TNode * SearchNode(TNode * startNode, TNode & prevNode, bool & isLeaf);
 
-TNode * InsertNode(TNode * startNode, TNode * newNode);
+TNode * InsertNode(TNode * startNode, TNode * newNode, bool needOK = true);
 TNode * DeleteNode(TNode * startNode, char * keyIn);
 
 void TreeDelete(TNode * node);
