@@ -1,5 +1,4 @@
-﻿#include <iostream>
-#include <string>
+﻿#include <string>
 #include <stdio.h>
 #include "tree.h"
 #include <time.h>
@@ -7,7 +6,7 @@
 using ull = unsigned long long;
 
 const int sizeOfChars = 256;
-
+int globalCountOfNodes = 0;
 /*
 	a - 97 -> 1100001
 	z - 122 -> 1111010
@@ -35,8 +34,13 @@ void Test(bool & a) {
 	return;
 }
 
-int main()
+// 18446 74407 37095 51615
+int main(int c, char * v[])
 {	
+	// std::ifstream file("txt.txt");
+	// TNode * treeNew = Load(file);
+	// PrintTree(treeNew,0);
+	// return 0;
 	time_t start = clock();
 	setlocale(LC_ALL, "rus");
 	/*for (int i = 97; i < 123; i++)
@@ -104,6 +108,43 @@ int main()
 
 			delete[] command;
 		}
+		else if(command[0] == '!'){
+			delete[] command;
+			command = new char[MAX_SIZE_OF_CHARS];
+
+			std::cin >> command;
+			if(strcmp(command,"Save") == 0){
+				delete[] command;
+				command = new char[MAX_SIZE_OF_CHARS];				
+				std::cin >> command;
+
+				std::ofstream file(command);
+				if(!file.is_open()){
+					std::cout << "Error: file didn't open\n";
+				}
+				else{
+					Save(tree,file);
+					file.close();
+				}
+				//std::cout << "\tAll OK\n";
+			}
+			else if(strcmp(command,"Load") == 0){
+				delete[] command;
+				command = new char[MAX_SIZE_OF_CHARS];				
+				std::cin >> command;
+
+				std::ifstream file(command);
+				if(!file.is_open()){
+					std::cout << "Error: file didn't open\n";
+				}
+				else{
+					TreeDelete(tree);
+					tree = Load(file);
+					file.close();
+				}
+			}
+			delete[] command;
+		}
 		else {
 			for (int i = 0; i < strlen(command); i++)
 			{
@@ -111,10 +152,10 @@ int main()
 			}
 			TNode * foundNode = SearchNode(tree, command);
 			if (foundNode && strcmp(foundNode->key,command) == 0) {
-				std::cout << foundNode->value << '\n';
+				std::cout << "OK: " << foundNode->value << '\n';
 			}
 			else {
-				std::cout << "Error: couldn't find node!\n";
+				std::cout << "NoSuchWord\n";
 			}
 			delete[] command;
 		}

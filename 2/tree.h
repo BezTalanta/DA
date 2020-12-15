@@ -1,19 +1,18 @@
 #pragma once
 #include <iostream>
 #include <cstring>
+#include <fstream>
 const int MAX_SIZE_OF_CHARS = 256;
 
 using ull = unsigned long long;
 
 struct TNode {
-	struct TNode *left, *right, *parent; // Указатели на узлы
-	int ind; // Какой проверяем индекс в бинарном числе
-	//char key[MAX_SIZE_OF_CHARS]; // Ключ
-	char * key; // Ключ
-	ull value; // Само значение
+	struct TNode *left, *right, *parent;
+	int ind;
+	char * key;
+	ull value;
 
 	~TNode() {
-		//std::cout << key << " deleted!\n";
 		delete[] key;
 	}
 
@@ -29,20 +28,18 @@ struct TNode {
 		}
 	}
 };
-// Ф-ия добавления узла в дерево
-//void AddNode(TNode * startNode, TNode * newNode);
-//TNode * AddNode(TNode * startNode, TNode * newNode);
 
+extern int globalCountOfNodes;
 
 TNode * SearchNode(TNode * startNode, char * key);
 TNode * SearchNode(TNode * startNode, TNode & prevNode, bool & isLeaf);
 
-//TNode * SearchNode(TNode * startNode, char * key, TNode & prevFind);
-
-//TNode * SearchNode(TNode * startNode, char * key);
 TNode * InsertNode(TNode * startNode, TNode * newNode);
 TNode * DeleteNode(TNode * startNode, char * keyIn);
 
 void TreeDelete(TNode * node);
 void PrintTree(TNode * root, int space);
-//void PrintTree(TNode * root, int line);
+
+void Save(TNode * startNode, std::ofstream & file);
+TNode * Load(std::ifstream & file);
+//void Save(TNode * startNode, TNode ** arr,int curLine,std::ofstream & file);

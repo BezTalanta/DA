@@ -190,10 +190,6 @@ TNode * SearchNode(TNode * startNode, char * key) {
 		curInd = curNode->ind;
 	}
 
-	/*if (&prevFind) {
-		prevFind = *prevNode;
-	}*/
-
 	return curNode;
 }
 
@@ -204,20 +200,21 @@ TNode * InsertNode(TNode * startNode, TNode * newNode) {
 		newNode->parent = nullptr;
 		newNode->ind = 0;
 		std::cout << "OK\n";
+		globalCountOfNodes++;
 		return newNode;
 	}
 
 	TNode * foundNode = SearchNode(startNode,newNode->key);
 	if (*foundNode == newNode) {
 		delete newNode;
-		std::cout << "Error: node is already exist!\n";
+		std::cout << "Exist\n";
 		return startNode;
 	}
 
 	// Bool in order know the direction of the right arrow of the newNode
 	bool isOneForNewNode = false;
 	int dif = GetDifference(foundNode,newNode,isOneForNewNode);
-	std::cout << "Dif ind: " << dif << ' ';
+	//std::cout << "Dif ind: " << dif << ' ';
 	newNode->ind = dif;
 
 	TNode * curN = startNode->left, * prevN = startNode;
@@ -273,24 +270,26 @@ TNode * InsertNode(TNode * startNode, TNode * newNode) {
 	}	
 
 	std::cout << "OK\n";
+	globalCountOfNodes++;
 	return startNode;
 }
 
 TNode * DeleteNode(TNode * startNode, char * keyIn) {
 	if (!startNode) {
-		std::cout << "Error: tree is empty!\n";
+		std::cout << "NoSuchWord\n";
 		return startNode;
 	}
 	
 	if (startNode->left == startNode) {
 		delete startNode;
-		std::cout << "Ok!\n";
+		std::cout << "OK\n";
+		globalCountOfNodes--;
 		return nullptr;
 	}
 
 	TNode * foundNode = SearchNode(startNode,keyIn);
 	if (strcmp(foundNode->key, keyIn) != 0) {
-		std::cout << "Error: can't find " << keyIn << " node!\n";
+		std::cout << "NoSuchWord\n";
 		return startNode;
 	}
 
@@ -327,6 +326,7 @@ TNode * DeleteNode(TNode * startNode, char * keyIn) {
 			}
 		}
 
+		globalCountOfNodes--;
 		std::cout << "OK\n";
 		delete foundNode;
 		return startNode;
@@ -397,164 +397,7 @@ TNode * DeleteNode(TNode * startNode, char * keyIn) {
 		}
 	}
 
-	// if(isLeftForNodeTmp){ // left for second node
-	// TNode * parentOfFoundNode = foundNodeNew->parent;
-	// if(parentOfFoundNode->left == foundNodeNew){ // left from parent second node to second node
-	// 	std::cout << "Flag11!";
-	// 	if(isLeafTmp2){ // check for third node is leaf
-	// 		std::cout << " Leaf!\n";
-	// 		parentOfFoundNode->left = foundNode;
-	// 	}
-	// 	else{
-	// 		std::cout << " not Leaf!\n";
-
-	// 		if(isLeftForNodeTmp){
-	// 			std::cout << " Kek1\n";
-	// 			parentOfFoundNode->left = foundNodeNew->right;
-	// 		}
-	// 		else{
-	// 			std::cout << " Kek2\n";
-	// 			parentOfFoundNode->left = foundNodeNew->left;
-	// 		}
-
-	// 		if(foundNodeNew->right->ind > foundNodeNew->parent->ind){
-	// 			foundNodeNew->right->parent = parentOfFoundNode;
-	// 		}
-
-	// 		if(isLeftForNodeTmp2){
-	// 			foundNodeNew2->left = foundNode;
-	// 		}
-	// 		else{
-	// 			foundNodeNew2->right = foundNode;
-	// 		}
-	// 	}
-	// }
-	// else{ // right from parent second node to second node
-	// 	std::cout << "Flag12! ";
-	// 	if(isLeafTmp2){ // check for third node is leaf
-	// 		std::cout << " Leaf!\n";
-	// 		parentOfFoundNode->right = foundNodeNew2;
-	// 		foundNodeNew2->parent = parentOfFoundNode;
-	// 	}
-	// 	else{
-	// 		std::cout << foundNodeNew->key;
-	// 		std::cout << " not Leaf!\n";
-
-	// 		if(isLeftForNodeTmp){
-	// 			parentOfFoundNode->right = foundNodeNew->right;
-	// 		}
-	// 		else{
-	// 			parentOfFoundNode->right = foundNodeNew->left;
-	// 		}
-
-	// 		if(foundNodeNew->right->ind > foundNodeNew->parent->ind){
-	// 			foundNodeNew->right->parent = parentOfFoundNode;
-	// 		}
-
-	// 		if(isLeftForNodeTmp2){ // arrow of third node
-	// 			foundNodeNew2->left = foundNode;
-	// 		}
-	// 		else{
-	// 			foundNodeNew2->right = foundNode;
-	// 		}	
-	// 	}	
-	// }
-	// else{
-	// 	TNode * parentOfFoundNode = foundNodeNew->parent;
-	// 	if(parentOfFoundNode->left == foundNodeNew){ // left from parent second node to second node
-	// 		if(isLeafTmp2){ // check for third node is leaf
-	// 			parentOfFoundNode->left = foundNode;
-	// 		}
-	// 		else{
-	// 			parentOfFoundNode->left = foundNodeNew->right;
-	// 			if(foundNodeNew->right->ind > foundNodeNew->parent->ind){
-	// 				foundNodeNew->right->parent = parentOfFoundNode;
-	// 			}		
-	// 		}
-	// 	}
-	// 	else{ // right from parent second node to second node
-	// 		if(isLeafTmp2){ // check for third node is leaf
-	// 			parentOfFoundNode->right = foundNode;
-	// 		}
-	// 		else{
-	// 			parentOfFoundNode->right = foundNodeNew->right;
-	// 			if(foundNodeNew->right->ind > foundNodeNew->parent->ind){
-	// 				foundNodeNew->right->parent = parentOfFoundNode;
-	// 			}	
-	// 		}	
-	// 	}
-	// }
-		// TNode * parentOfFoundNode = foundNodeNew->parent;
-		// if(parentOfFoundNode->right == foundNodeNew){
-		// 	std::cout << "Q1 ";
-		// 	if(isLeafTmp2){
-		// 		std::cout << "B1\n";
-		// 		parentOfFoundNode->right = foundNodeNew->left;
-		// 	}
-		// 	else{
-		// 		std::cout << "B2\n";
-		// 		parentOfFoundNode->right = foundNodeNew->right;
-		// 	}
-
-		// 	if(parentOfFoundNode->ind < foundNodeNew->left->ind){
-		// 		foundNodeNew->left->parent = parentOfFoundNode;
-		// 	}
-		// }
-		// else{
-		// 	std::cout << "Q2 ";
-		// 	if(isLeafTmp2){
-		// 		std::cout << "B1\n";
-		// 		parentOfFoundNode->left = foundNodeNew->left;
-		// 	}
-		// 	else{
-		// 		std::cout << "B2\n";
-		// 		parentOfFoundNode->left = foundNodeNew->right;
-		// 	}
-
-		// 	if(parentOfFoundNode->ind < foundNodeNew->right->ind){
-		// 		foundNodeNew->right->parent = parentOfFoundNode;
-		// 	}
-		// }
-	// }
-	// else{
-	// 	TNode * parentOfFoundNode = foundNodeNew->parent;
-	// 	if(parentOfFoundNode->right == foundNodeNew){
-	// 		std::cout << "Q3 ";
-	// 		if(isLeafTmp2){
-	// 			std::cout << "B1\n";
-	// 			parentOfFoundNode->right = foundNodeNew->right;
-	// 		}
-	// 		else{
-	// 			std::cout << "B2\n";
-	// 			parentOfFoundNode->right = foundNodeNew->left;
-	// 		}
-
-	// 		if(parentOfFoundNode->ind < foundNodeNew->left->ind){
-	// 			foundNodeNew->left->parent = parentOfFoundNode;
-	// 		}
-	// 	}
-	// 	else{
-	// 		std::cout << "Q4 ";
-	// 		if(isLeafTmp2){
-	// 			std::cout << "B1\n";
-	// 			parentOfFoundNode->left = foundNodeNew->right;
-	// 		}
-	// 		else{
-	// 			std::cout << "B2\n";
-	// 			parentOfFoundNode->left = foundNodeNew->left;
-	// 		}
-	// 	}
-	// }
-
-	// if(isLeftForNodeTmp2){
-	// 	foundNodeNew2->left = foundNode;
-	// }
-	// else{
-	// 	foundNodeNew2->right = foundNode;
-	// }
-
-	//std::cout << "Was -> " << foundNode->key;
-	//std::cout << ", I deleting it-> " << foundNodeNew->key << '\n';
+	globalCountOfNodes--;
 	std::cout << "OK\n";
 	delete foundNodeNew;
 
@@ -627,4 +470,106 @@ void PrintTree(TNode * root, int space) {
 	if (root->right != nullptr && root->right->ind > ind) {
 		PrintTree(root->right, space + 1);
 	}
+}
+
+void Save(TNode * startNode, std::ofstream & file){
+	if(!startNode) { std::cout << "Error: tree is empty!\n";return; }
+
+	int curInd = startNode->ind;
+	file << startNode->key << ' ' << startNode->ind << ' ';
+	file << startNode->value << ' ';
+
+	bool isNeedLeft = false, isNeedRight = false;
+	if(startNode->left->ind > curInd){
+		file << "-1 ";
+		isNeedLeft = true;
+	}
+	else if(startNode->left == startNode){
+		file << "-2 ";
+	}
+	else{
+		file << startNode->left->key << ' ';
+	}
+
+	if(startNode->right == nullptr){
+		file << "-3\n";
+	}
+	else if(startNode->right->ind > curInd){
+		file << "-1\n";
+		isNeedRight = true;
+	}
+	else if(startNode->right == startNode){
+		file << "-2\n";
+	}
+	else{
+		file << startNode->right->key << '\n';
+	}
+
+	if(isNeedLeft){
+		Save(startNode->left,file);
+	}
+
+	if(isNeedRight){
+		Save(startNode->right,file);
+	}
+}
+
+TNode * Load(std::ifstream & file){
+	TNode * tree = nullptr;
+	char * line = new char[1000]{'\0'};
+	while(file.getline(line,1000)){
+		TNode * newNode = new TNode;
+		char * kek = new char[MAX_SIZE_OF_CHARS] {'\0'};
+		int indOfKek = 0,state = -1;
+		for (int i = 0; i < strlen(line); ++i)
+		{
+			std::cout << "Checking: " << line[i] << '\n';
+			if(line[i] == ' ' || line[i] == '\n'){
+				state++;
+				indOfKek = 0;
+			}
+			else{
+				kek[indOfKek] = line[i];
+				indOfKek++;
+				continue;
+			}
+
+			if(state == 0){
+				newNode->key = kek;
+				std::cout << "Load: key: " << newNode->key << "_\n";
+			}
+			else if(state == 1){
+				newNode->ind = 0;
+				for (int i = 0; i < strlen(kek); ++i)
+				{
+					newNode->ind *= 10;
+					newNode->ind += kek[i] - '0';
+				}
+
+				//std::cout << "Load: ind: " << newNode->ind << '\n';
+				delete[] kek;
+			}
+			else if(state == 2){
+				newNode->value = 0;
+				for (int i = 0; i < strlen(kek); ++i)
+				{
+					newNode->value *= 10;
+					newNode->value += kek[i] - '0';
+				}
+				std::cout << "Load: val: " << newNode->value << '\n';
+				delete[] kek;
+			}
+			else{
+				delete[] kek;
+			}
+			
+			kek = new char[MAX_SIZE_OF_CHARS];
+		}
+
+		delete[] kek;
+		tree = InsertNode(tree, newNode);
+	}
+
+	delete[] line;
+	return tree;
 }
