@@ -1,5 +1,6 @@
-#include "tree.h"
+#include "tree.hpp"
 
+namespace trie{
 const int USE_FOR_BYTES = 126;
 const int BYTES_OF_ONE_CHAR = 5;
 
@@ -10,7 +11,7 @@ int & GetMin(int & a, int & b) {
 	return a;
 }
 
-int GetDifference(TNode * a, TNode * b, bool & isOneForNewNode) {
+int GetDifference(trie::TNode * a, trie::TNode * b, bool & isOneForNewNode) {
 	char *ac = a->key, *bc = b->key;
 	int acLen = strlen(ac), bcLen = strlen(bc);
 	int maxInd = GetMin(acLen, bcLen) * BYTES_OF_ONE_CHAR;
@@ -56,7 +57,7 @@ int GetDifference(TNode * a, TNode * b, bool & isOneForNewNode) {
 	return (indOfWord + 1) * BYTES_OF_ONE_CHAR + 5;
 }
 
-TNode * SearchNode(TNode * needToFoundOwner,bool & isLeaf, bool & isLeftForFoundNode) {
+trie::TNode * SearchNode(trie::TNode * needToFoundOwner,bool & isLeaf, bool & isLeftForFoundNode) {
 	char * keyIn = needToFoundOwner->key;
 	
 	int prevInd = -1;
@@ -102,60 +103,12 @@ TNode * SearchNode(TNode * needToFoundOwner,bool & isLeaf, bool & isLeftForFound
 	return needToFoundOwner;
 }
 
-//TNode * SearchNode(TNode * startNode, TNode & prevNode, bool & isLeaf) {
-//	if (!startNode) {
-//		return nullptr;
-//	}
-//
-//	char * keyIn = startNode->key;
-//
-//	if (startNode->ind == 0) {
-//		startNode = startNode->left;
-//	}
-//
-//	int curInd = startNode->ind, prevInd = -1;
-//	while (curInd > prevInd) {
-//		int indOfWord = curInd / BYTES_OF_ONE_CHAR, indOfLetter = curInd % BYTES_OF_ONE_CHAR;
-//		if (indOfLetter == 0) { indOfWord--, indOfLetter = BYTES_OF_ONE_CHAR; }
-//
-//		if ((keyIn[indOfWord] >> (BYTES_OF_ONE_CHAR - indOfLetter)) & 1) {
-//			if (strcmp(startNode->right->key, keyIn) == 0) {
-//				if (prevInd == -1) {
-//					isLeaf = true;
-//				}
-//
-//				prevNode = *startNode;
-//				return startNode->right;
-//			}
-//
-//			startNode = startNode->right;
-//		}
-//		else {
-//			if (strcmp(startNode->left->key,keyIn) == 0) {
-//				if (prevInd == -1) {
-//					isLeaf = true;
-//				}
-//
-//				prevNode = *startNode;
-//				return startNode->left;
-//			}
-//
-//			startNode = startNode->left;
-//		}
-//
-//		prevInd = curInd;
-//		curInd = startNode->ind;
-//	}
-//
-//	return nullptr;
-//}
-
-TNode * SearchNode(TNode * startNode, char * key) {
+trie::TNode * SearchNode(trie::TNode * startNode, char * key) {
 	if (!startNode) {
 		return nullptr;
 	}
 
-	TNode * curNode = startNode->left, * prevNode = startNode;
+	trie::TNode * curNode = startNode->left, * prevNode = startNode;
 	int prevInd = 0, curInd = curNode->ind, maxInd = strlen(key) * BYTES_OF_ONE_CHAR;
 	while (curInd > prevInd) {
 		int indOfWord = curInd / BYTES_OF_ONE_CHAR, indOfLetter = curInd % BYTES_OF_ONE_CHAR;
@@ -166,22 +119,10 @@ TNode * SearchNode(TNode * startNode, char * key) {
 		}
 
 		if ((key[indOfWord] >> (BYTES_OF_ONE_CHAR - indOfLetter)) & 1) {
-			//if (curNode->right->ind <= maxInd) { // Neyveren v etom
-			//	curNode = curNode->right;
-			//}
-			//else {
-			//	break;
-			//}
 			prevNode = curNode;
 			curNode = curNode->right;
 		}
 		else {
-			//if (curNode->left->ind <= maxInd) { // Neyveren v etom
-			//	curNode = curNode->left;
-			//}
-			//else {
-			//	break;
-			//}
 			prevNode = curNode;
 			curNode = curNode->left;
 		}
@@ -193,7 +134,7 @@ TNode * SearchNode(TNode * startNode, char * key) {
 	return curNode;
 }
 
-TNode * InsertNode(TNode * startNode, TNode * newNode, bool needOK) {
+trie::TNode * InsertNode(trie::TNode * startNode, trie::TNode * newNode, bool needOK) {
 	if (!startNode) {
 		newNode->left = newNode;
 		newNode->right = nullptr;
@@ -206,7 +147,7 @@ TNode * InsertNode(TNode * startNode, TNode * newNode, bool needOK) {
 		return newNode;
 	}
 
-	TNode * foundNode = SearchNode(startNode,newNode->key);
+	trie::TNode * foundNode = trie::SearchNode(startNode,newNode->key);
 	if (*foundNode == newNode) {
 		delete newNode;
 		std::cout << "Exist\n";
@@ -219,7 +160,7 @@ TNode * InsertNode(TNode * startNode, TNode * newNode, bool needOK) {
 	//std::cout << "Dif ind: " << dif << ' ';
 	newNode->ind = dif;
 
-	TNode * curN = startNode->left, * prevN = startNode;
+	trie::TNode * curN = startNode->left, * prevN = startNode;
 	int prevInd = 0, curInd = curN->ind;
 	bool isPrevLeftEqualCurrent = true;
 	char * c = newNode->key;
@@ -278,7 +219,7 @@ TNode * InsertNode(TNode * startNode, TNode * newNode, bool needOK) {
 	return startNode;
 }
 
-TNode * DeleteNode(TNode * startNode, char * keyIn) {
+trie::TNode * DeleteNode(trie::TNode * startNode, char * keyIn) {
 	if (!startNode) {
 		std::cout << "NoSuchWord\n";
 		return startNode;
@@ -287,24 +228,23 @@ TNode * DeleteNode(TNode * startNode, char * keyIn) {
 	if (startNode->left == startNode) {
 		delete startNode;
 		std::cout << "OK\n";
-		globalCountOfNodes--;
+		trie::globalCountOfNodes--;
 		return nullptr;
 	}
 
-	TNode * foundNode = SearchNode(startNode,keyIn);
+	trie::TNode * foundNode = trie::SearchNode(startNode,keyIn);
 	if (strcmp(foundNode->key, keyIn) != 0) {
 		std::cout << "NoSuchWord\n";
 		return startNode;
 	}
 
 	bool isLeafTmp = false, isLeftForNodeTmp = false;
-	TNode * foundNodeNew = SearchNode(foundNode, isLeafTmp, isLeftForNodeTmp);
+	trie::TNode * foundNodeNew = SearchNode(foundNode, isLeafTmp, isLeftForNodeTmp);
 
 	if(isLeafTmp){ // Когда удаляемый элемент - лист
-		TNode * parentOfFoundNode = foundNode->parent;
+		trie::TNode * parentOfFoundNode = foundNode->parent;
 		if(parentOfFoundNode->left == foundNode){
 			if(isLeftForNodeTmp){
-				//std::cout << "Flag1!\n";
 				parentOfFoundNode->left = foundNode->right;
 			}
 			else{
@@ -317,11 +257,9 @@ TNode * DeleteNode(TNode * startNode, char * keyIn) {
 		}
 		else{
 			if(isLeftForNodeTmp){
-				//std::cout << "Flag3!\n";
 				parentOfFoundNode->right = foundNode->right;
 			}
 			else{
-				//std::cout << "Flag4!\n";
 				parentOfFoundNode->right = foundNode->left;
 			}
 
@@ -330,20 +268,20 @@ TNode * DeleteNode(TNode * startNode, char * keyIn) {
 			}
 		}
 
-		globalCountOfNodes--;
+		trie::globalCountOfNodes--;
 		std::cout << "OK\n";
 		delete foundNode;
 		return startNode;
 	}
 
 	bool isLeafTmp2 = false, isLeftForNodeTmp2 = false;
-	TNode * foundNodeNew2 = SearchNode(foundNodeNew, isLeafTmp2, isLeftForNodeTmp2);
+	trie::TNode * foundNodeNew2 = SearchNode(foundNodeNew, isLeafTmp2, isLeftForNodeTmp2);
 
 	// Меняем значения первого нода на значения второго
 	foundNode->Set(foundNodeNew->key);
 	foundNode->value = foundNodeNew->value;
 
-	TNode * parentOfSecondNode = foundNodeNew->parent;
+	trie::TNode * parentOfSecondNode = foundNodeNew->parent;
 	if(parentOfSecondNode->left == foundNodeNew){ // Родитель второго узла указывает на него налево
 		//std::cout << "Flag1 ";
 		if(isLeafTmp2){ // 1 случай
@@ -407,22 +345,20 @@ TNode * DeleteNode(TNode * startNode, char * keyIn) {
 	return startNode;
 }
 
-void TreeDelete(TNode * node) {
+void TreeDelete(trie::TNode * node) {
 	if (!node) {
 		return;
 	}
 
-	//std::cout << "Delete it: " << node->key << '\n';
 	int nodeInd = node->ind;
 	if (node->left->ind > nodeInd) {
-		TreeDelete(node->left);
+		trie::TreeDelete(node->left);
 	}
 
 	if (node->right != nullptr && node->right->ind > nodeInd) {
-		TreeDelete(node->right);
+		trie::TreeDelete(node->right);
 	}
 
-	//std::cout << node->key << ": Successfully deleted\n";
 	delete node;
 }
 
@@ -430,7 +366,7 @@ void TreeDelete(TNode * node) {
 // aa ao ag ae af ad
 // abp abpp abppp
 
-void PrintTree(TNode * root, int space) {
+void PrintTree(trie::TNode * root, int space) {
 	if (!root) {
 		return;
 	}
@@ -467,61 +403,35 @@ void PrintTree(TNode * root, int space) {
 
 	int ind = root->ind;
 	if (root->left->ind > ind) {
-		PrintTree(root->left, space + 1);
+		trie::PrintTree(root->left, space + 1);
 	}
 
 	if (root->right != nullptr && root->right->ind > ind) {
-		PrintTree(root->right, space + 1);
+		trie::PrintTree(root->right, space + 1);
 	}
 }
 
-void Save(TNode * startNode, std::ofstream & file){
+void Save(trie::TNode * startNode, std::ofstream & file){
 	if(!startNode) { std::cout << "Error: tree is empty!\n";return; }
 
 	int curInd = startNode->ind;
 	file << startNode->key << ' ' << startNode->ind << ' ';
-	file << startNode->value << ' ';
+	file << startNode->value << '\n';
 
-	bool isNeedLeft = false, isNeedRight = false;
 	if(startNode->left->ind > curInd){
-		file << "-1 ";
-		isNeedLeft = true;
-	}
-	else if(startNode->left == startNode){
-		file << "-2 ";
-	}
-	else{
-		file << startNode->left->key << ' ';
+		trie::Save(startNode->left,file);
 	}
 
-	if(startNode->right == nullptr){
-		file << "-3\n";
-	}
-	else if(startNode->right->ind > curInd){
-		file << "-1\n";
-		isNeedRight = true;
-	}
-	else if(startNode->right == startNode){
-		file << "-2\n";
-	}
-	else{
-		file << startNode->right->key << '\n';
-	}
-
-	if(isNeedLeft){
-		Save(startNode->left,file);
-	}
-
-	if(isNeedRight){
-		Save(startNode->right,file);
+	if(startNode->right != nullptr && startNode->right->ind > curInd){
+		trie::Save(startNode->right,file);
 	}
 }
 
-TNode * Load(std::ifstream & file){
-	TNode * tree = nullptr;
+trie::TNode * Load(std::ifstream & file){
+	trie::TNode * tree = nullptr;
 	char * line = new char[1000];
 	while(file.getline(line,1000)){
-		TNode * newNode = new TNode;
+		trie::TNode * newNode = new trie::TNode;
 		char * kek = new char[MAX_SIZE_OF_CHARS] {'\0'};
 		int indOfKek = 0,state = -1;
 		for (int i = 0; i < strlen(line); ++i)
@@ -538,7 +448,6 @@ TNode * Load(std::ifstream & file){
 
 			if(state == 0){
 				newNode->key = kek;
-				//std::cout << "Load: key: " << newNode->key << "_\n";
 			}
 			else if(state == 1){
 				newNode->ind = 0;
@@ -547,31 +456,23 @@ TNode * Load(std::ifstream & file){
 					newNode->ind *= 10;
 					newNode->ind += kek[i] - '0';
 				}
-
-				//std::cout << "Load: ind: " << newNode->ind << '\n';
-				delete[] kek;
-			}
-			else if(state == 2){
-				newNode->value = 0;
-				for (int i = 0; i < strlen(kek); ++i)
-				{
-					newNode->value *= 10;
-					newNode->value += kek[i] - '0';
-				}
-				//std::cout << "Load: val: " << newNode->value << '\n';
-				delete[] kek;
-			}
-			else{
 				delete[] kek;
 			}
 			
 			kek = new char[MAX_SIZE_OF_CHARS] {'\0'};
 		}
 
+		newNode->value = 0;
+		for (int i = 0; i < strlen(kek); ++i)
+		{
+			newNode->value *= 10;
+			newNode->value += kek[i] - '0';
+		}
 		delete[] kek;
-		tree = InsertNode(tree, newNode, false);
+		tree = trie::InsertNode(tree, newNode, false);
 	}
 
 	delete[] line;
 	return tree;
+}
 }
