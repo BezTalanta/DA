@@ -3,33 +3,21 @@
 #include "tree.hpp"
 //#include <time.h>
 
-using ull = unsigned long long;
-
-const int sizeOfChars = 256;
-int globalCountOfNodes = 0;
-/*
-	a - 97 -> 1100001
-	z - 122 -> 1111010
-	A - 65 -> 1000001
-	Z - 90 -> 1011010
-*/
-
-// trie::TNode * SearchNode(trie::TNode * startNode, char * key);
-// trie::TNode * InsertNode(trie::TNode * startNode, trie::TNode * newNode, bool needOK = true);
-// void PrintTree(trie::TNode * root, int space);
-
-// 18446 74407 37095 51615
 int main(int c, char * v[])
 {	
+	//std::cin.tie(0);
+	std::ios_base::sync_with_stdio(false);
+
 	//time_t start = clock();
 	setlocale(LC_ALL, "rus");
 
-	trie::TNode * tree = nullptr;
-	char * command = new char[MAX_SIZE_OF_CHARS];
+	trie::TNode * tree = 0;
+	char * command = new char[MAX_SIZE_OF_CHARS+1];
 	while (std::cin >> command && command[0] != '\x4') {
 		if (command[0] == '+') {
 			std::cin >> command;
-			for (int i = 0; i < strlen(command); i++)
+			int len = strlen(command);
+			for (int i = 0; i < len; i++)
 			{
 				command[i] = tolower(command[i]);
 			}			
@@ -57,32 +45,31 @@ int main(int c, char * v[])
 		}
 		else if(command[0] == '!'){
 			delete[] command;
-			command = new char[MAX_SIZE_OF_CHARS];
+			command = new char[MAX_SIZE_OF_CHARS+1];
 
 			std::cin >> command;
 			if(strcmp(command,"Save") == 0){
 				delete[] command;
-				command = new char[MAX_SIZE_OF_CHARS];				
+				command = new char[MAX_SIZE_OF_CHARS+1];				
 				std::cin >> command;
 
 				std::ofstream file(command);
 				if(!file.is_open()){
-					std::cout << "Error: file didn't open\n";
+					std::cout << "ERROR: file didn't open\n";
 				}
 				else{
 					trie::Save(tree,file);
 					file.close();
-					std::cout << "OK\n";
 				}
 			}
 			else if(strcmp(command,"Load") == 0){
 				delete[] command;
-				command = new char[MAX_SIZE_OF_CHARS];				
+				command = new char[MAX_SIZE_OF_CHARS+1];				
 				std::cin >> command;
 
 				std::ifstream file(command);
 				if(!file.is_open()){
-					std::cout << "Error: file didn't open\n";
+					std::cout << "ERROR: file didn't open\n";
 				}
 				else{
 					trie::TreeDelete(tree);
@@ -108,7 +95,7 @@ int main(int c, char * v[])
 			delete[] command;
 		}
 
-		command = new char[MAX_SIZE_OF_CHARS];
+		command = new char[MAX_SIZE_OF_CHARS+1];
 	}
 	delete[] command;
 

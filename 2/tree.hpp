@@ -3,9 +3,10 @@
 #include <cstring>
 #include <fstream>
 
-namespace trie{
 const int MAX_SIZE_OF_CHARS = 256;
-using ull = unsigned long long;
+typedef unsigned long long ull;
+//using ull = uint64_t;
+namespace trie{
 
 	struct TNode {
 		struct TNode *left, *right, *parent;
@@ -23,14 +24,12 @@ using ull = unsigned long long;
 		}
 
 		void Set(char * t) {
-			for (int i = 0; i < MAX_SIZE_OF_CHARS; i++)
+			for (int i = 0; i < MAX_SIZE_OF_CHARS+1; i++)
 			{
 				key[i] = t[i];
 			}
 		}
 	};
-
-	extern int globalCountOfNodes;
 
 	TNode * SearchNode(TNode * startNode, char * key);
 	TNode * SearchNode(TNode * startNode, TNode & prevNode, bool & isLeaf);
