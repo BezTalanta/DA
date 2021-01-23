@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
 #include <string>
-// TLine<unsigned short, std::string> - T
+
 // Вектор
 template <typename T>
 class TVector {
@@ -24,12 +24,9 @@ public:
 		delete[] lines;
 	}
 
-	// Clear void
+	// Метод очистки
 	void Clean() {
-		for (int i = 0; i < size; i++)
-		{
-			lines[i].Clear();
-		}
+		for (int i = 0; i < size; i++) lines[i].Clear();
 	}
 
 	// Метод добавления новой линии в массив
@@ -45,8 +42,7 @@ public:
 		{
 			tmpLines[i] = lines[i];
 		}
-		tmpLines[size] = t;
-		//Clean();
+		tmpLines[size] = t;		
 		delete[] lines;
 		lines = tmpLines;
 		size++;
