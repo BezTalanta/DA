@@ -3,7 +3,6 @@
 #include "struct.h"  
 #include "class.h"
 
-//TVector<TLine<unsigned int, std::string> > Sort(TVector<TLine<unsigned int, std::string> > & vct, unsigned int max);
 void Sort(TVector<TLine<unsigned int, std::string> > & vct, unsigned int max);
 
 int main() {
@@ -14,7 +13,7 @@ int main() {
 	unsigned int max = 0, key;
 
 	std::string * val = new std::string;
-	// Объект
+	
 	TVector<TLine<unsigned int, std::string> > vct;
 	while (std::cin >> key >> *val) {
 		// Нахождения максимума
@@ -27,7 +26,7 @@ int main() {
 		newLine->key = key;
 		newLine->value = val;
 		val = new std::string;
-		// Добавление в вектор нашей линии
+		
 		vct.PushBack(*newLine);
 	}
 	delete val;
