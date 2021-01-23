@@ -1,11 +1,10 @@
-﻿#include <string>
+#include <string>
 #include <stdio.h>
 #include "tree.hpp"
 //#include <time.h>
 
 int main(int c, char * v[])
-{	
-	//std::cin.tie(0);
+{		
 	std::ios_base::sync_with_stdio(false);
 
 	//time_t start = clock();
