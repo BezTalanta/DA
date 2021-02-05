@@ -18,13 +18,13 @@ namespace bm {
 		return resultPattern;
 	}
 
-	std::unordered_map<char, std::vector<int>> RulerBadSymbol(const std::string& pattern) {
-		std::unordered_map<char, std::vector<int>> resultMap;
+	std::unordered_map<char, std::vector<int> > RulerBadSymbol(const std::string& pattern) {
+		std::unordered_map<char, std::vector<int> > resultMap;
 		int patternLength = pattern.length();
 		for (int i = patternLength - 1; i >= 0; i--)
 		{
 			char curSymbol = pattern[i];
-			std::unordered_map<char, std::vector<int>>::iterator itFind = resultMap.find(curSymbol);
+			std::unordered_map<char, std::vector<int> >::iterator itFind = resultMap.find(curSymbol);
 			if (itFind == resultMap.end()) {
 				std::vector<int> vct;
 				vct.push_back(i+1);
