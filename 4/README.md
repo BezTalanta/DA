@@ -3,11 +3,11 @@
 
 Пример:
 
-Ввод:
-cat dog cat dog bird
-CAT dog CaT Dog Cat DOG bird CAT
-dog cat dog bird
+Ввод:   
+cat dog cat dog bird   
+CAT dog CaT Dog Cat DOG bird CAT   
+dog cat dog bird   
 
-Вывод:
-1, 3
+Вывод:   
+1, 3   
 1, 8
