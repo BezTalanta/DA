@@ -7,12 +7,6 @@ std::string GetRightLine(std::string& patternS);
 
 int main()
 {
-    /*std::string test = "   a   b c   ";
-    test = GetRightLine(test);
-    std::unordered_map<char, std::vector<int> > patternTest = bm::RulerBadSymbol(test);
-    for (const auto& tmp : patternTest)
-        std::cout << tmp.first << ' ' << tmp.second[0] << '\n';
-    return 0;*/
     std::ios_base::sync_with_stdio(false);
     std::cin.tie(NULL), std::cout.tie(NULL);
 
@@ -26,6 +20,13 @@ int main()
 
     // Pattern with Bad symbol rule
     std::unordered_map<char, std::vector<int> > pattern = bm::RulerBadSymbol(patternS);
+    // Pattern with Good Suffix rule
+    std::unordered_map<std::string, int > patternGood = bm::RulerGoodSuffix(patternS);
+
+    std::unordered_map<char, std::vector<int> > badSymbol;
+    std::unordered_map<std::string, int > goodSuffix;
+    bm::ComplexRules(patternS, badSymbol, goodSuffix);
+    return 0;
 
     std::string text = "";                  // All text
     std::vector<std::vector<int>> indWords; // Line's vector which contains indexes of words
@@ -54,17 +55,18 @@ int main()
     //
 
     // Check pattern to text    
-    //std::vector<int> resultF, resultS;
     std::vector<std::pair<int, int> > result;
 
     int currenPositionInText = patternLen;
     while (currenPositionInText <= textLen) {
+        std::string currentSuffix = "";
         for (int i = 0; i < patternLen; i++)
         {
             char chFromText = text[currenPositionInText - i - 1], chFromPattern = patternS[patternLen - i - 1];
             if (chFromPattern != chFromText) {
                 std::unordered_map<char, std::vector<int> >::iterator itFind = pattern.find(chFromText);
-
+                std::unordered_map<std::string, int >::iterator itFind2 = patternGood.find(currentSuffix);
+               
                 int patI = patternLen - i;
                 if (itFind == pattern.end()) {
                     currenPositionInText += patI; // maybe wrong
@@ -99,10 +101,7 @@ int main()
                 for (const int& checkWords : curIndWords) {
                     if (positionInLine < checkWords) break;
                     resultIndOfWord++;
-                }
-
-                /*resultF.push_back(foundIndLine);
-                resultS.push_back(resultIndOfWord);*/
+                }           
 
                 result.push_back({ resultIndLine, resultIndOfWord});
 
