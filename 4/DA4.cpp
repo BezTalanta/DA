@@ -19,14 +19,11 @@ int main()
     int patternLen = patternS.length();
 
     // Pattern with Bad symbol rule
-    std::unordered_map<char, std::vector<int> > pattern = bm::RulerBadSymbol(patternS);
+    std::unordered_map<char, std::vector<int> > ruleBadSymbol;
     // Pattern with Good Suffix rule
-    std::unordered_map<std::string, int > patternGood = bm::RulerGoodSuffix(patternS);
-
-    std::unordered_map<char, std::vector<int> > badSymbol;
-    std::unordered_map<std::string, int > goodSuffix;
-    bm::ComplexRules(patternS, badSymbol, goodSuffix);
-    return 0;
+    std::unordered_map<std::string, int > ruleGoodSuffix;
+    bm::ComplexRules(patternS, ruleBadSymbol, ruleGoodSuffix);
+    //return 0;
 
     std::string text = "";                  // All text
     std::vector<std::vector<int>> indWords; // Line's vector which contains indexes of words
@@ -54,35 +51,51 @@ int main()
     if (!textLen) return 0;
     //
 
+    //std::cout << text << '\n';
+
     // Check pattern to text    
     std::vector<std::pair<int, int> > result;
 
     int currenPositionInText = patternLen;
-    while (currenPositionInText <= textLen) {
+    while (currenPositionInText <= textLen) {      
         std::string currentSuffix = "";
         for (int i = 0; i < patternLen; i++)
-        {
-            char chFromText = text[currenPositionInText - i - 1], chFromPattern = patternS[patternLen - i - 1];
+        {           
+            char chFromText = text[currenPositionInText - i - 1], chFromPattern = patternS[patternLen - i - 1];            
             if (chFromPattern != chFromText) {
-                std::unordered_map<char, std::vector<int> >::iterator itFind = pattern.find(chFromText);
-                std::unordered_map<std::string, int >::iterator itFind2 = patternGood.find(currentSuffix);
+                std::unordered_map<char, std::vector<int> >::iterator itFind = ruleBadSymbol.find(chFromText);
+                std::unordered_map<std::string, int >::iterator itFind2 = ruleGoodSuffix.find(currentSuffix);
                
-                int patI = patternLen - i;
-                if (itFind == pattern.end()) {
-                    currenPositionInText += patI; // maybe wrong
-                    break;
-                }
+                int offsetBad = 0, offsetGood = 0;
 
-                int offset = 0;
-                for (const int& charPositions : itFind->second) {
-                    if (charPositions < patI) {
-                        offset = patI - charPositions;
-                        break;
+                int patI = patternLen - i;
+                if (itFind != ruleBadSymbol.end()) {
+                    for (const int& charPositions : itFind->second) {
+                        if (charPositions < patI) {
+                            offsetBad = patI - charPositions;
+                            break;
+                        }
                     }
                 }
 
-                if (offset != 0) currenPositionInText += offset;
-                else currenPositionInText++;
+                if (itFind2 != ruleGoodSuffix.end())
+                    offsetGood = itFind2->second;
+
+                if (offsetBad == 0 && offsetGood == 0) {
+                    std::cout << "One ruler past: " << currenPositionInText << ' ';
+                    ++currenPositionInText;
+                    std::cout << currenPositionInText << '\n';
+                }
+                else if (offsetBad > offsetGood) {
+                    std::cout << "Bad ruler past: " << currenPositionInText << ' ';
+                    currenPositionInText += offsetBad;
+                    std::cout << currenPositionInText << '\n';
+                }
+                else {
+                    std::cout << "Good ruler past: " << currenPositionInText << ' ';
+                    currenPositionInText += offsetGood;                   
+                    std::cout << currenPositionInText << '\n';
+                }                
 
                 break;
             }
@@ -107,13 +120,9 @@ int main()
 
                 currenPositionInText++;
             }
+            currentSuffix = chFromPattern + currentSuffix;
         }
-    }
-
-    //std::cout << resultSize << '\n';
-    /*int resultSize = result.size();
-    for (int i = 0; i < resultSize; ++i)
-        std::cout << result[i].first << ", " << result[i].second << '\n';*/
+    }    
 
     for (const std::pair<int, int>& pr : result)
         std::cout << pr.first << ", " << pr.second << '\n';
@@ -158,3 +167,8 @@ std::vector<int> WordsInd(std::string& text) {
 
     return result;
 }
+
+/*
+GTAGCGGCG
+GTTATAGCTGATCGCGGC GTAGCGGCGAA
+*/

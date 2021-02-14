@@ -40,14 +40,7 @@ namespace bm {
 
 		for (int i = patternLength - 1; i >= 0; i--)
 		{
-			resultMap[pattern[i]].push_back(i + 1);
-
-			//char curSymbol = pattern[i];
-			/*std::unordered_map<char, std::vector<int> >::iterator itFind = resultMap.find(curSymbol);
-			if (itFind == resultMap.end())
-				resultMap[curSymbol] = { i + 1 };
-			else
-				itFind->second.push_back(i + 1);*/
+			resultMap[pattern[i]].push_back(i + 1);			
 		}
 
 		return resultMap;
@@ -59,7 +52,7 @@ namespace bm {
 		std::string curPattern = "";
 
 		int patSz = pattern.size(), curPatSz = 0;
-		for (int i = patSz - 1; i >= patSz/2; --i) // abcdef yyycc
+		for (int i = patSz - 1; i >= patSz/2; --i)
 		{
 			curPattern = pattern[i] + curPattern;
 			curPatSz++;
