@@ -3,7 +3,6 @@
 extern int dbg_count;
 
 namespace trie{
-	//const int USE_FOR_BYTES = 126;
 	const int BYTES_OF_ONE_CHAR = 5;
 
 	int & GetMin(int & a, int & b) {
@@ -42,7 +41,7 @@ namespace trie{
 			}
 		}
 
-	// Find the difference between two chars of different lengths
+	// Find the difference between two chars of different length
 		char getLastChar;
 		if (acLen < bcLen) {
 			getLastChar = bc[indOfWord + 1]-96;
@@ -107,7 +106,6 @@ namespace trie{
 
 	trie::TNode * SearchNode(trie::TNode * startNode, char * key) {
 		if (!startNode) {
-			//return NULL;
 			return 0;
 		}
 
