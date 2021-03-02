@@ -5,7 +5,6 @@
 
 const int MAX_SIZE_OF_CHARS = 256;
 typedef unsigned long long ull;
-//using ull = uint64_t;
 namespace trie{
 
 	struct TNode {
