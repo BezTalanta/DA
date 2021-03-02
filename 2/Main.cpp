@@ -1,13 +1,13 @@
 #include <string>
 #include <stdio.h>
 #include "tree.hpp"
-//#include <time.h>
+#include <time.h>
 
 int main(int c, char * v[])
-{		
+{
 	std::ios_base::sync_with_stdio(false);
 
-	//time_t start = clock();
+	time_t start = clock();
 	setlocale(LC_ALL, "rus");
 
 	trie::TNode * tree = 0;
@@ -100,7 +100,7 @@ int main(int c, char * v[])
 
 	trie::TreeDelete(tree);
 
-	//time_t end = clock();
-	//std::cout << "Your work time: " << (double)(end-start)/CLOCKS_PER_SEC << '\n';
+	time_t end = clock();
+	std::cout << "Your work time: " << (double)(end-start)/CLOCKS_PER_SEC << '\n';
 	return 0;
 }
