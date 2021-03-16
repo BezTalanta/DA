@@ -1,19 +1,19 @@
 #pragma once
+#include <unordered_map>
 #include <vector>
-#include <string>
+#include <algorithm>
 #include <iostream>
 
-#include <unordered_map>
-#include <iterator>
+namespace BM {
+	// Additional functions
+	std::vector<int> ZFunction(const std::vector<std::string>& pattern);
 
-namespace bm {
-	std::unordered_map<char, std::vector<int> > RulerBadSymbol(const std::string& pattern);
-	std::unordered_map<std::string, int > RulerGoodSuffix(const std::string& pattern);
-	void ComplexRules(const std::string& pattern, std::unordered_map<char, std::vector<int> >& BadSymbol, std::unordered_map<std::string, int >& GoodSuffix);
+	// Parses pattern with bad symbol ruler
+	std::unordered_map<std::string, std::vector<int> > RulerBadSymbol(const std::vector<std::string>& pattern);
+	// Parses pattern with good suffix ruler
+	std::pair<std::vector<int>, std::vector<int> > RulerGoodSuffix(const std::vector<std::string>& pattern);
+
+	// Functions which find indexes from rules
+	int FindBadSymbol(const std::unordered_map<std::string, std::vector<int> >& ruler, const std::string& word, const int index);
+	int FindGoodSuffix(const std::pair<std::vector<int>, std::vector<int> >& ruler, const int index);
 }
-
-/*
-cat dog cat dog bird
-CAT dog CaT Dog Cat DOG bird CAT
-dog cat dog bird
-*/
