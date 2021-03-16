@@ -1,77 +1,93 @@
 #include "BM.hpp"
 
-namespace bm {
-	void ComplexRules(const std::string& pattern, std::unordered_map<char, std::vector<int> >& BadSymbol, std::unordered_map<std::string, int >& GoodSuffix) {
-		int patternSize = pattern.size(), halfSize = patternSize >> 1;
+namespace BM {
+	std::vector<int> ZFunction(const std::vector<std::string>& pattern) {
+        std::vector<int> result(pattern.size(), 0);
+        for (int i = 1, l = 0, r = 0; i < pattern.size(); i++) {
+            if (i <= r)
+                result[i] = std::min(r - i + 1, result[i - l]);
 
-		std::string curPattern = "";
-		int curPatSz = 0;
-		for (int i = patternSize - 1; i >= 0; --i)
-		{
-			char curChar = pattern[i];
-			// Bad Symbol
-			BadSymbol[curChar].push_back(i + 1);
-			// Good Suffix
-			if (i >= halfSize) {
-				curPattern = curChar + curPattern;
-				curPatSz++;
-
-				int curIndexOfcurPattern = curPatSz - 1;
-				for (int j = i - 1; j >= 0; --j) {
-					if (curPattern[curIndexOfcurPattern] == pattern[j]) {
-						if (curIndexOfcurPattern == 0) {
-							GoodSuffix[curPattern] = i - j;
-							break;
-						}
-						curIndexOfcurPattern--;
-					}
-					else {
-						curIndexOfcurPattern = curPatSz - 1;
-					}
-				}
-			}
-		}
+            while (i + result[i] < pattern.size() &&
+                pattern[pattern.size() - 1 - result[i]] ==
+                pattern[pattern.size() - 1 - (i + result[i])])
+                ++result[i];
+            if (i + result[i] - 1 > r)
+                l = i, r = i + result[i] - 1;
+        }
+        return result;
 	}
 
-	std::unordered_map<char, std::vector<int> > RulerBadSymbol(const std::string& pattern) {
-		std::unordered_map<char, std::vector<int> > resultMap;
-
-		int patternLength = pattern.length();
-
-		for (int i = patternLength - 1; i >= 0; i--)
-		{
-			resultMap[pattern[i]].push_back(i + 1);			
+	std::unordered_map<std::string, std::vector<int> > RulerBadSymbol(const std::vector<std::string>& pattern) {
+		std::unordered_map<std::string, std::vector<int> > resultMap;
+		for (int i = 0; i < pattern.size(); ++i) {
+			resultMap[pattern[i]].push_back(i + 1);
 		}
-
 		return resultMap;
 	}
 
-	std::unordered_map<std::string, int> RulerGoodSuffix(const std::string& pattern) {
-		std::unordered_map<std::string, int> result;
-		
-		std::string curPattern = "";
+    std::pair<std::vector<int>, std::vector<int> > RulerGoodSuffix(const std::vector<std::string>& pattern) {
+        std::vector<int> zf = ZFunction(pattern);
+        std::vector<int> nf(zf.rbegin(), zf.rend());
 
-		int patSz = pattern.size(), curPatSz = 0;
-		for (int i = patSz - 1; i >= patSz/2; --i)
-		{
-			curPattern = pattern[i] + curPattern;
-			curPatSz++;
+        int prevNum = 0;
+        std::vector<int> L(pattern.size(), 0), l(pattern.size(), 0);
+        for (int i = 1; i <= nf.size(); ++i) {
+            // For L
+            if (nf[i - 1] != 0) {
+                L[pattern.size() - nf[i - 1]] = i;
+            }
+            //
 
-			int curIndexOfcurPattern = curPatSz - 1;
-			for (int j = i - 1; j >= 0; --j) {
-				if (curPattern[curIndexOfcurPattern] == pattern[j]) {
-					if (curIndexOfcurPattern == 0) {
-						result[curPattern] = i - j;
-						break;
-					}
-					curIndexOfcurPattern--;
-				}
-				else {
-					curIndexOfcurPattern = curPatSz - 1;
-				}
-			}
-		}
+            // For l'
+            int j = nf.size() - (nf.size() - i + 1) + 1;
+            if (j == nf[j - 1])
+                prevNum = j;
+            l[nf.size() - i] = prevNum;
+            // 
+        }
 
-		return result;
-	}
+        return {L, l};
+    }
+
+    int FindBadSymbol(const std::unordered_map<std::string, std::vector<int> >& ruler, const std::string& word, const int index) {
+        std::unordered_map<std::string, std::vector<int> >::const_iterator itFind = ruler.find(word);
+        if (itFind == ruler.end())
+            return 0;
+
+        int prevNum = 0;
+        for (const int& item : ruler.at(word)) {
+            if (item < index)
+                prevNum = item;
+            else
+                break;
+        }
+
+        if (!prevNum)
+            return 0;
+        return index - prevNum;
+    }
+
+    int FindGoodSuffix(const std::pair<std::vector<int>, std::vector<int> >& ruler, const int index) {
+        if (index >= ruler.first.size())
+            return 0;
+        if (ruler.first[index] != 0)
+            return ruler.first.size() - ruler.first[index];
+        return ruler.second.size() - ruler.second[index];
+    }
 }
+
+/*
+C C T T T T G C
+G C T T C T G C T A C C T T T T G C G C G C G C G C G G A A
+1, 11
+
+G T A G C G G C G
+G T T A T A G C T G A T C G C G G C G T A G C G G C G A A
+1, 19
+
+cat dog cat dog bird
+CAT dog CaT Dog Cat DOG bird CAT
+dog cat dog bird
+1, 3
+1, 8
+*/
