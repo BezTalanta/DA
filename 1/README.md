@@ -26,3 +26,5 @@
 0 xGfxrxGGxrxMMMMfrr   
 65535 xGfxrxGGxrxMMMMfrrr   
 65535 xGfxrxGGxrxMMMMfr
+
+# P.S.: нельзя применять STL
