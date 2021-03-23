@@ -14,3 +14,15 @@
 
 ## Формат результата
 Выходные данные состоят из тех же строк, что и входные, за исключением пустых и порядка следования.
+
+## Ввод
+0 xGfxrxGGxrxMMMMfrrrG   
+65535 xGfxrxGGxrxMMMMfrrr   
+0 xGfxrxGGxrxMMMMfrr   
+65535 xGfxrxGGxrxMMMMfr
+
+## Вывод
+0  xGfxrxGGxrxMMMMfrrrG   
+0 xGfxrxGGxrxMMMMfrr   
+65535 xGfxrxGGxrxMMMMfrrr   
+65535 xGfxrxGGxrxMMMMfr
