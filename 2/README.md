@@ -42,6 +42,11 @@ OK: 1
 OK   
 NoSuchWord
 
+# Каверзные вопросы
+### Чем отличается BST от Patricia
+BST может быть линейным списком(когда числа идут по порядку), патриция нет
+
 # Источники
 1) Handbook of data structures and applications.
 2) Лекции
+3) Сдача ЛР
