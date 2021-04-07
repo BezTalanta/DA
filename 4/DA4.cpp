@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include "BM.hpp"
 
-#include <time.h>
+#include <chrono>
 
 // Get line of text from input and convert upper case chars to lower
 bool GetLine(std::vector<std::string>& vct);
@@ -15,6 +15,7 @@ void ReadText(std::vector<std::pair<std::string, std::pair<int, int> > >& vct);
 
 int main()
 {
+    auto start = std::chrono::steady_clock::now();
     std::vector<std::string> pattern;
     if (!GetLine(pattern)) // If pattern is empty
         return 0;
@@ -27,7 +28,7 @@ int main()
     // std::pair second is word's index in line
     std::vector<std::pair<std::string, std::pair<int, int> > > text;
 
-    // // Text reading
+    // Text reading
     ReadText(text);
 
     std::vector<std::pair<int, int> > result;
@@ -62,6 +63,9 @@ int main()
         }
     }
     
+    auto finish = std::chrono::steady_clock::now();
+    std::cout << "Work time: " << std::chrono::duration_cast<std::chrono::milliseconds>(finish - start).count() << "ms\n";
+    std::cout << "Count: " << result.size() << '\n';
     for (const auto& item : result)
         printf("%d, %d\n", item.first, item.second);
     return 0;
